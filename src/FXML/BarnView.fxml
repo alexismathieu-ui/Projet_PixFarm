@@ -1,14 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="a"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane fx:id="barnRoot" xmlns:fx="http://javafx.com/fxml" fx:controller="FarmController.BarnController"
+            style="-fx-background-color: #5D4037;" prefWidth="800" prefHeight="600">
 
-</AnchorPane>
+    <top>
+        <HBox alignment="CENTER" spacing="20" style="-fx-padding: 15; -fx-background-color: #3E2723;">
+            <Label text="🏠 LA GRANGE" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Retour à la Ferme" onAction="#goToFarm"
+                    style="-fx-background-color: #8D6E63; -fx-text-fill: white; -fx-cursor: hand; -fx-font-size: 14;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent; -fx-padding: 20;">
+            <GridPane fx:id="animalGrid" hgap="15" vgap="15" alignment="CENTER">
+            </GridPane>
+        </ScrollPane>
+    </center>
+
+    <right>
+        <VBox spacing="15" prefWidth="200" style="-fx-background-color: #4E342E; -fx-padding: 20;">
+            <Label text="STATISTIQUES" style="-fx-text-fill: #D7CCC8; -fx-font-weight: bold;"/>
+            <Separator style="-fx-opacity: 0.3;"/>
+
+            <Label fx:id="animalCountLabel" text="Animaux : 0" style="-fx-text-fill: white;"/>
+            <Label fx:id="productionLabel" text="Prêt à récolter : 0" style="-fx-text-fill: #FFCCBC;"/>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button text="Boutique Animal" onAction="#onOpenAnimalShop" maxWidth="Infinity"
+                    style="-fx-background-color: #A1887F; -fx-text-fill: white;"/>
+        </VBox>
+    </right>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #3E2723;">
+            <Label fx:id="labelStatus" text="Bienvenue dans la grange !" style="-fx-text-fill: #BCAAA4; -fx-font-style: italic;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

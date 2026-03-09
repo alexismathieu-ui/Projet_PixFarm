@@ -18,7 +18,7 @@ public class InventoryController {
     public void update(Farms farms) {
         inventoryList.getItems().clear();
 
-        String[] items = {"Wheat", "Carrot", "Potato", "Tomato", "Kiwi", "Strawberry", "Corn", "Pumpkin"};
+        String[] items = {"Wheat", "Carrot", "Potato", "Tomato", "Kiwi", "Strawberry", "Corn", "Pumpkin", "Egg", "Milk", "Truff","Wool"};
 
         for (String name : items) {
             int seeds = farms.getInventory().getQuantity(name + "_Seed");

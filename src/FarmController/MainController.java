@@ -35,10 +35,13 @@ public class MainController {
     private String selectedActions = "NONE";
     private String selectedSeed = "Wheat_Seed";
     private InventoryController currentInventoryCtrl;
+    private Stage inventoryStage;
 
     @FXML
-    public void initialize(){
-        this.farms = new Farms(10000);
+    public void initialize() {
+        if (this.farms == null){
+            this.farms = new Farms(10000);
+    }
 
         refreshGrid();
 
@@ -138,6 +141,11 @@ public class MainController {
 
             Stage storeStage = new Stage();
             storeStage.setTitle("Market");
+
+            storeStage.initOwner(farmGrid.getScene().getWindow());
+            storeStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+
+
             storeStage.setScene(new Scene(root));
             storeStage.show();
         } catch (IOException e) {
@@ -153,11 +161,13 @@ public class MainController {
 
     @FXML
     private void onOpenInventory() {
+        if (inventoryStage != null && inventoryStage.isShowing()) {
+            inventoryStage.toFront();
+            return;
+        }
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/InventoryView.fxml"));
             Parent root = loader.load();
-
-
 
             currentInventoryCtrl = loader.getController();
             currentInventoryCtrl.update(this.farms);
@@ -188,5 +198,28 @@ public class MainController {
 
     public Farms getFarms() {
         return this.farms;
+    }
+
+    public void setFarms(Farms farms) {
+        this.farms = farms;
+
+        if (this.gameTimer != null) {
+            this.gameTimer.stop();
+        }
+        this.gameTimer = new GameTimer(this.farms, this::updateUI);
+        this.gameTimer.start();
+
+        refreshGrid();
+        updateUI();
+    }
+
+    public void goToBarn() throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/BarnView.fxml"));
+        Parent root = loader.load();
+        FarmController.BarnController barnctrl = loader.getController();
+        barnctrl.setFarms(this.farms);
+
+        Stage stage = (Stage) farmGrid.getScene().getWindow();
+        stage.getScene().setRoot(root);
     }
 }

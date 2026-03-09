@@ -62,12 +62,11 @@ public class StoreController {
     @FXML
     private void sellingCrops() {
         double totalGains = 0;
-        String[] allCrops = {"Wheat", "Carrot", "Potato", "Tomato", "Kiwi","Strawberry","Corn","Pumpkin"};
+        String[] allCrops = {"Wheat", "Carrot", "Potato", "Tomato", "Kiwi","Strawberry","Corn","Pumpkin", "Egg", "Milk", "Wool", "Truffle"};
 
         for (String name : allCrops) {
             String key = name + "_Crop";
             int qty = farms.getInventory().getQuantity(key);
-
             if (qty > 0) {
                 double price = getSellPrice(name);
                 totalGains += (qty * price);
@@ -96,6 +95,10 @@ public class StoreController {
             case "Strawberry" -> 150000.0;
             case "Corn" -> 575000.0;
             case "Pumpkin" -> 3000000.0;
+            case "Egg" -> 500;
+            case "Wool" -> 3000;
+            case "Milk" -> 20000;
+            case "Truff" -> 150000;
             default -> 0.0;
         };
     }

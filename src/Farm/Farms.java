@@ -1,21 +1,22 @@
 package Farm;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Farms {
     private double money;
     private Plot[][] field;
-    private List<Animals> animals;
-    private final int LINES = -5;
+    private ArrayList<Animals> myAnimals = new ArrayList<>();
+    private final int LINES = 5;
     private final int COLUMNS = 5;
     private Inventory inventory;
 
     public Farms(double initialMoney){
         this.money = initialMoney;
-        this.animals = new ArrayList<>();
         this.field = new Plot[LINES][COLUMNS];
         this.inventory = new Inventory();
+        this.myAnimals = new ArrayList<>();
 
         for (int i = 0; i < LINES; i++){
             for (int j = 0; j < COLUMNS ; j ++){
@@ -42,6 +43,14 @@ public class Farms {
 
     public double getMoney() {
         return money;
+    }
+
+    public ArrayList<Animals> getMyAnimals(){
+        return myAnimals;
+    }
+
+    public void addAnimals(Animals animals){
+        this.myAnimals.add(animals);
     }
 
     public Plot[][] getField() {

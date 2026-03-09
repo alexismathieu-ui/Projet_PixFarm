@@ -9,12 +9,15 @@
             fx:controller="FarmController.MainController">
 
     <top>
-        <HBox alignment="CENTER" spacing="50" style="-fx-background-color: rgba(0,0,0,0.5); -fx-padding: 10;">
+        <HBox alignment="CENTER" spacing="20" style="-fx-background-color: rgba(0,0,0,0.5); -fx-padding: 10;">
             <Label fx:id="moneyLabel" style="-fx-text-fill: white; -fx-font-size: 20;" text="Argent: 10 $" />
             <Label fx:id="labelStatus" style="-fx-text-fill: #ffff00; -fx-font-size: 18;" text="Ready to Plant !" />
             <Button onAction="#onOpenStore" text="Market" />
             <Button onAction="#onOpenInventory" text="Inventory" />
             <Button onAction="#onActionHarvest" styleClass="pixel-button" text="Harvest" />
+
+            <Button onAction="#goToBarn" text="Grange 🏠" style="-fx-background-color: #795548; -fx-text-fill: white;" />
+
             <Button onAction="#onSave" text="Saving 💾" />
         </HBox>
     </top>

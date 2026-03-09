@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" alignment="CENTER" prefWidth="300" style="-fx-padding: 20; -fx-background-color: #3E2723;"
+      xmlns:fx="http://javafx.com/fxml" fx:controller="FarmController.AnimalShopController">
+
+    <Label fx:id="moneyLabel" style="-fx-text-fill: white; -fx-font-size: 18;"/>
+
+    <Label text="BOUTIQUE D'ANIMAUX" style="-fx-text-fill: #FFCCBC; -fx-font-weight: bold;"/>
+
+    <Button text="Poulet (5 000$)" onAction="#buyChicken" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
+    <Button text="Mouton (10 000$)" onAction="#buySheep" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
+    <Button text="Vache (50 000$)" onAction="#buyCow" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
+    <Button text="Cochon (100 000$)" onAction="#buyPig" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
+</VBox>

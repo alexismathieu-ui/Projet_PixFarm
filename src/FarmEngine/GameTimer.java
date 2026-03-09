@@ -1,5 +1,6 @@
 package FarmEngine;
 
+import Farm.Animals;
 import Farm.Farms;
 import Farm.Plot;
 import javafx.animation.KeyFrame;
@@ -29,6 +30,9 @@ public class GameTimer {
                     ground.getActualCulture().growing();
                 }
             }
+        }
+        for (Animals animals : farms.getMyAnimals()){
+            animals.update();
         }
         updateUI.run();
     }

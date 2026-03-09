@@ -4,11 +4,16 @@ import Farm.Animals;
 
 public class Pig extends Animals {
     public Pig() {
-        super("Pig", 100000.0, 25);
+        super("Pig", 1000000.0, 20);
     }
 
     @Override
-    public String getProduct() {
+    public String getProductType() {
         return "Truff";
+    }
+
+    @Override
+    public String getFoodNeeded() {
+        return "Potato_Crop";
     }
 }
