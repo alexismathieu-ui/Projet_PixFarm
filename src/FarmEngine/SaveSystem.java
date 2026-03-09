@@ -23,6 +23,9 @@ public class SaveSystem {
     public static void saves(Farms farms){
         try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH))) {
             writer.println(farms.getMoney());
+            writer.println(farms.getLevel());
+            writer.println(farms.getCurrentXP());
+            writer.println(farms.getNextLevelXP());
 
             String[] types = {"Wheat", "Tomato", "Carrot", "Potato", "Kiwi", "Strawberry", "Corn", "Pumpkin", "Egg", "Truff", "Milk", "Wool"};
             for(String type : types) {
@@ -60,6 +63,10 @@ public class SaveSystem {
             if (scanner.hasNextLine()) {
                 farms.setMoney(Double.parseDouble(scanner.nextLine()));
             }
+
+            if (scanner.hasNextLine()) farms.setLevel(Integer.parseInt(scanner.nextLine()));
+            if (scanner.hasNextLine()) farms.setCurrentXP(Double.parseDouble(scanner.nextLine()));
+            if (scanner.hasNextLine()) farms.setNextLevelXP(Double.parseDouble(scanner.nextLine()));
 
             String[] types = {"Wheat", "Tomato", "Carrot", "Potato", "Kiwi", "Strawberry", "Corn", "Pumpkin", "Egg", "Truff", "Milk", "Wool"};
             for(String type : types) {

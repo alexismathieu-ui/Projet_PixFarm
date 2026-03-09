@@ -13,6 +13,11 @@
             <Region HBox.hgrow="ALWAYS" />
             <Button text="Retour à la Ferme" onAction="#goToFarm"
                     style="-fx-background-color: #8D6E63; -fx-text-fill: white; -fx-cursor: hand; -fx-font-size: 14;"/>
+            <VBox alignment="CENTER" spacing="5">
+                <Label fx:id="levelLabel" text="Niveau 1" style="-fx-text-fill: #FFD700; -fx-font-weight: bold;"/>
+                <ProgressBar fx:id="xpBar" progress="0.0" prefWidth="200"
+                             style="-fx-accent: #4CAF50;"/> <Label fx:id="xpLabel" text="0 / 100 XP" style="-fx-text-fill: white; -fx-font-size: 10;"/>
+            </VBox>
         </HBox>
     </top>
 

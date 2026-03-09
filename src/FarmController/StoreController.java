@@ -1,5 +1,7 @@
 package FarmController;
 
+import Farm.Crops.Carrot;
+import Farm.Crops.Kiwi;
 import Farm.Crops.Wheat;
 import Farm.Farms;
 import javafx.event.ActionEvent;
@@ -11,8 +13,44 @@ public class StoreController {
     private Farms farms;
     private Runnable onPurchaseCallback;
 
-    public void setFarms(Farms farms){
+    @FXML
+    private Button Tomato_Seed;
+    @FXML
+    private Button Pumpkin_Seed;
+    @FXML
+    private Button Potato_Seed;
+    @FXML
+    private Button Kiwi_Seed;
+    @FXML
+    private Button Corn_Seed;
+    @FXML
+    private Button Strawberry_Seed;
+    @FXML
+    private Button Carrot_Seed;
+
+    public void setFarms(Farms farms) {
         this.farms = farms;
+        updateUI();
+    }
+
+    private void updateUI(){
+        updateButtonState(Tomato_Seed, 5);
+        updateButtonState(Carrot_Seed, 2);
+        updateButtonState(Potato_Seed, 3);
+        updateButtonState(Kiwi_Seed, 6);
+        updateButtonState(Strawberry_Seed, 7);
+        updateButtonState(Corn_Seed, 10);
+        updateButtonState(Pumpkin_Seed, 20);
+    }
+
+    private void updateButtonState(Button btn, int requiredLevel) {
+        if (btn != null) {
+            boolean isLocked = farms.getLevel() < requiredLevel;
+            btn.setDisable(isLocked);
+            if (isLocked) {
+                btn.setText("🔒 Niv. " + requiredLevel);
+            }
+        }
     }
 
     public void setOnPurchaseCallback(Runnable callback) {
@@ -20,17 +58,24 @@ public class StoreController {
     }
 
     @FXML
-    private void buySeeds(ActionEvent event){
+    private void buySeeds(ActionEvent event) {
         Button buybtn = (Button) event.getSource();
         String seedType = buybtn.getId();
+        int reqLevel = getRequiredLevel(seedType);
+
+        if (farms.getLevel() < reqLevel) {
+            System.out.println("Bloqué ! Niveau " + reqLevel + " requis.");
+            return;
+        }
 
         double price = getPriceforSeeds(seedType);
 
-        if (farms.spending(price)){
+        if (farms.spending(price)) {
             farms.getInventory().add(seedType, 1);
 
             System.out.println("Buy successful : " + seedType);
-        } else {System.out.println("Not enough money to buy : " + seedType);
+        } else {
+            System.out.println("Not enough money to buy : " + seedType);
         }
 
         if (onPurchaseCallback != null) {
@@ -38,8 +83,8 @@ public class StoreController {
         }
     }
 
-    private double getPriceforSeeds(String type){
-        return switch(type) {
+    private double getPriceforSeeds(String type) {
+        return switch (type) {
             case "Wheat_Seed" -> 5.0;
             case "Carrot_Seed" -> 180.0;
             case "Potato_Seed" -> 850.0;
@@ -53,16 +98,16 @@ public class StoreController {
     }
 
     @FXML
-    private void closeStore(ActionEvent event){
+    private void closeStore(ActionEvent event) {
         Button btn = (Button) event.getSource();
-        Stage stage= (Stage) btn.getScene().getWindow();
+        Stage stage = (Stage) btn.getScene().getWindow();
         stage.close();
     }
 
     @FXML
     private void sellingCrops() {
         double totalGains = 0;
-        String[] allCrops = {"Wheat", "Carrot", "Potato", "Tomato", "Kiwi","Strawberry","Corn","Pumpkin", "Egg", "Milk", "Wool", "Truffle"};
+        String[] allCrops = {"Wheat", "Carrot", "Potato", "Tomato", "Kiwi", "Strawberry", "Corn", "Pumpkin", "Egg", "Milk", "Wool", "Truffle"};
 
         for (String name : allCrops) {
             String key = name + "_Crop";
@@ -70,6 +115,7 @@ public class StoreController {
             if (qty > 0) {
                 double price = getSellPrice(name);
                 totalGains += (qty * price);
+                farms.addXP(qty * 5);
                 farms.getInventory().add(key, -qty);
                 if (onPurchaseCallback != null) {
                     onPurchaseCallback.run();
@@ -100,6 +146,20 @@ public class StoreController {
             case "Milk" -> 20000;
             case "Truff" -> 150000;
             default -> 0.0;
+        };
+    }
+
+    private int getRequiredLevel(String seedName) {
+        return switch (seedName) {
+            case "Wheat_Seed" -> 1;
+            case "Tomato_Seed" -> 5;
+            case "Carrot_Seed" -> 2;
+            case "Potato_Seed" -> 3;
+            case "Kiwi_Seed" -> 6;
+            case "Strawberry_Seed" -> 7;
+            case "Corn_Seed" -> 10;
+            case "Pumpkin_Seed" -> 20;
+            default -> 1;
         };
     }
 }

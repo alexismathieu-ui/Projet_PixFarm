@@ -9,8 +9,8 @@
 
     <Label text="BOUTIQUE D'ANIMAUX" style="-fx-text-fill: #FFCCBC; -fx-font-weight: bold;"/>
 
-    <Button text="Poulet (5 000$)" onAction="#buyChicken" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
-    <Button text="Mouton (10 000$)" onAction="#buySheep" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
-    <Button text="Vache (50 000$)" onAction="#buyCow" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
-    <Button text="Cochon (100 000$)" onAction="#buyPig" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
+    <Button text="Poulet (5 000$)" fx:id="Chicken_Btn" onAction="#buyChicken" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
+    <Button text="Mouton (10 000$)" fx:id="Sheep_Btn" onAction="#buySheep" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
+    <Button text="Vache (50 000$)" fx:id="Cow_Btn" onAction="#buyCow" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
+    <Button text="Cochon (100 000$)" fx:id="Pig_Btn" onAction="#buyPig" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
 </VBox>

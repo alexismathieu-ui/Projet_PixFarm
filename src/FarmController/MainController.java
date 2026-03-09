@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -30,12 +31,25 @@ public class MainController {
     @FXML
     private Label labelStatus;
 
+    @FXML
+    private Button barnButton;
+
+    @FXML
+    private ProgressBar xpBar;
+
+    @FXML
+    private Label levelLabel;
+
+    @FXML
+    private Label xpLabel;
+
     private Farms farms;
     private GameTimer gameTimer;
     private String selectedActions = "NONE";
     private String selectedSeed = "Wheat_Seed";
     private InventoryController currentInventoryCtrl;
     private Stage inventoryStage;
+    int requiredLevel;
 
     @FXML
     public void initialize() {
@@ -52,6 +66,20 @@ public class MainController {
     private void updateUI(){
         moneyLabel.setText("Money : " + (int)farms.getMoney() + " $");
         refreshGrid();
+
+        double progress = farms.getCurrentXP() / farms.getNextLevelXP();
+        xpBar.setProgress(progress);
+        levelLabel.setText("Niveau " + farms.getLevel());
+        xpLabel.setText((int)farms.getCurrentXP() + " / " + (int)farms.getNextLevelXP() + " XP");
+
+        barnButton.setDisable(farms.getLevel() < 5);
+        if (farms.getLevel() >= 2) {
+            barnButton.setDisable(false);
+            barnButton.setText("Grange 🏠");
+        } else {
+            barnButton.setDisable(true);
+            barnButton.setText("Grange (Niv. 2)");
+        }
     }
 
     private void refreshGrid(){
@@ -117,6 +145,7 @@ public class MainController {
         } else if (plotting.getActualCulture().isReady()) {
             String cropName = plotting.getActualCulture().getName() + "_Crop";
             farms.getInventory().add(cropName, 1);
+            farms.addXP(1000);
             refreshInventoryUI();
             plotting.collect();
             labelStatus.setText("Collected : " + cropName);
@@ -214,6 +243,10 @@ public class MainController {
     }
 
     public void goToBarn() throws IOException{
+        if (farms.getLevel() < requiredLevel) {
+            System.out.println("Niveau " + requiredLevel + " requis pour cet animal !");
+            return;
+        }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/BarnView.fxml"));
         Parent root = loader.load();
         FarmController.BarnController barnctrl = loader.getController();

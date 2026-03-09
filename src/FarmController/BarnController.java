@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -30,6 +31,9 @@ public class BarnController {
     private BorderPane barnRoot;
     @FXML
     private GridPane animalGrid;
+    @FXML private Label levelLabel;
+    @FXML private ProgressBar xpBar;
+    @FXML private Label xpLabel;
     @FXML
     private Label animalCountLabel;
     @FXML
@@ -41,10 +45,23 @@ public class BarnController {
     public void setFarms(Farms farms) {
         this.farms = farms;
         Timeline autoRefresh = new Timeline(new KeyFrame(Duration.millis(700), event -> {
+            updateLevelUI();
             refreshAnimalGrid();
         }));
         autoRefresh.setCycleCount(Timeline.INDEFINITE);
         autoRefresh.play();
+    }
+    private void updateLevelUI(){
+        if (levelLabel != null && xpBar != null){
+            levelLabel.setText("Niveau " + farms.getLevel());
+
+            double progress = farms.getCurrentXP() / farms.getNextLevelXP();
+            xpBar.setProgress(progress);
+
+            if (xpLabel != null) {
+                xpLabel.setText((int)farms.getCurrentXP() + " / " + (int)farms.getNextLevelXP() + " XP");
+            }
+        }
     }
 
     private void refreshAnimalGrid() {
@@ -86,6 +103,7 @@ public class BarnController {
             card.setOnMouseClicked(event -> {
                 if (animals.hasProduced()) {
                     farms.getInventory().add(animals.getProductType() + "_Crop", 1);
+                    farms.addXP(50);
                     animals.setProduced(false);
                     animals.setHungry(true);
                     System.out.println("Récolté : " + animals.getProductType());
@@ -94,6 +112,7 @@ public class BarnController {
                     String food = animals.getFoodNeeded();
                     if (farms.getInventory().getQuantity(food) > 0) {
                         farms.getInventory().add(food, -1);
+                        farms.addXP(25);
                         animals.setHungry(false);
                         System.out.println(animals.getSpecies() + " mange et commence à produire...");
                     } else {

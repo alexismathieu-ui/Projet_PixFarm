@@ -15,49 +15,49 @@
         <HBox spacing="15" alignment="CENTER_LEFT">
             <Label text="🌾 Wheat (5 $)" textFill="white" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="Acheter" id="Wheat_Seed" onAction="#buySeeds"/>
+            <Button text="Acheter" fx:id="Wheat_Seed" onAction="#buySeeds"/>
         </HBox>
 
         <HBox spacing="15" alignment="CENTER_LEFT">
             <Label text="🥕 Carrot (180 $)" textFill="white" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="Acheter" id="Carrot_Seed" onAction="#buySeeds"/>
+            <Button text="Acheter" fx:id="Carrot_Seed" onAction="#buySeeds"/>
         </HBox>
 
         <HBox spacing="15" alignment="CENTER_LEFT">
             <Label text="🥔 Potato (850 $)" textFill="white" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="Acheter" id="Potato_Seed" onAction="#buySeeds"/>
+            <Button text="Acheter" fx:id="Potato_Seed" onAction="#buySeeds"/>
         </HBox>
 
         <HBox spacing="15" alignment="CENTER_LEFT">
             <Label text="🍅 Tomato (3.5K $)" textFill="white" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="Acheter" id="Tomato_Seed" onAction="#buySeeds"/>
+            <Button text="Acheter" fx:id="Tomato_Seed" onAction="#buySeeds"/>
         </HBox>
 
         <HBox spacing="15" alignment="CENTER_LEFT">
             <Label text="🥝 Kiwi (15K $)" textFill="white" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="Acheter" id="Kiwi_Seed" onAction="#buySeeds"/>
+            <Button text="Acheter" fx:id="Kiwi_Seed" onAction="#buySeeds"/>
         </HBox>
 
         <HBox spacing="15" alignment="CENTER_LEFT">
             <Label text="🍓 Strawberry (60K $)" textFill="white" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="Acheter" id="Strawberry_Seed" onAction="#buySeeds"/>
+            <Button text="Acheter" fx:id="Strawberry_Seed" onAction="#buySeeds"/>
         </HBox>
 
         <HBox spacing="15" alignment="CENTER_LEFT">
             <Label text="🌽 Corn (250K $)" textFill="white" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="Acheter" id="Corn_Seed" onAction="#buySeeds"/>
+            <Button text="Acheter" fx:id="Corn_Seed" onAction="#buySeeds"/>
         </HBox>
 
         <HBox spacing="15" alignment="CENTER_LEFT">
             <Label text="🎃 Pumpkin (950K $)" textFill="white" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="Acheter" id="Pumpkin_Seed" onAction="#buySeeds"/>
+            <Button text="Acheter" fx:id="Pumpkin_Seed" onAction="#buySeeds"/>
         </HBox>
 
     </VBox>
