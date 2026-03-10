@@ -109,6 +109,8 @@ public class MainController {
                     if (!pricedisplay){
                         double currentCost = farms.getNextPlotCost();
                         Label priceLabel = new Label("🛒\n" + (int)currentCost + "$");
+                        rect.setFill(Color.web("#5a5a5a"));
+                        rect.setStroke(Color.GOLD);
                         priceLabel.setTextFill(Color.GOLD);
                         priceLabel.setStyle("-fx-font-weight: bold; -fx-text-alignment: center;");
                         visualCell.getChildren().addAll(rect, priceLabel);
