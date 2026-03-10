@@ -27,6 +27,8 @@ public class SaveSystem {
             writer.println(farms.getCurrentXP());
             writer.println(farms.getNextLevelXP());
 
+            writer.println(farms.getUnlockedPlotsCount());
+
             String[] types = {"Wheat", "Tomato", "Carrot", "Potato", "Kiwi", "Strawberry", "Corn", "Pumpkin", "Egg", "Truff", "Milk", "Wool"};
             for(String type : types) {
                 writer.println(farms.getInventory().getQuantity(type + "_Seed"));
@@ -36,6 +38,9 @@ public class SaveSystem {
             for (int i = 0; i < farms.getNbLINES(); i++) {
                 for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
                     Plot p = farms.getField()[i][j];
+
+                    writer.println(p.isLocked());
+
                     if (p.isEmpty()) {
                         writer.println("EMPTY");
                     } else {
@@ -60,13 +65,15 @@ public class SaveSystem {
             File file = new File("saves/save.txt");
             Scanner scanner = new Scanner(file);
 
-            if (scanner.hasNextLine()) {
-                farms.setMoney(Double.parseDouble(scanner.nextLine()));
-            }
-
+            if (scanner.hasNextLine()) {farms.setMoney(Double.parseDouble(scanner.nextLine()));}
             if (scanner.hasNextLine()) farms.setLevel(Integer.parseInt(scanner.nextLine()));
             if (scanner.hasNextLine()) farms.setCurrentXP(Double.parseDouble(scanner.nextLine()));
             if (scanner.hasNextLine()) farms.setNextLevelXP(Double.parseDouble(scanner.nextLine()));
+
+            if (scanner.hasNextLine()) {
+                int count = Integer.parseInt(scanner.nextLine());
+                for(int i = 0; i < count; i++) farms.incrementUnlockedPlots();
+            }
 
             String[] types = {"Wheat", "Tomato", "Carrot", "Potato", "Kiwi", "Strawberry", "Corn", "Pumpkin", "Egg", "Truff", "Milk", "Wool"};
             for(String type : types) {
@@ -78,6 +85,8 @@ public class SaveSystem {
             for (int i = 0; i < farms.getNbLINES(); i++) {
                 for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
                     if (scanner.hasNextLine()) {
+                        boolean isLocked = Boolean.parseBoolean(scanner.nextLine());
+                        farms.getField()[i][j].setLocked(isLocked);
 
                         String line = scanner.nextLine();
 

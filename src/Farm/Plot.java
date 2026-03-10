@@ -3,6 +3,7 @@ package Farm;
 public class Plot {
     private Culture actualCulture;
     private boolean estGood;
+    private boolean locked = true;
 
     public Plot(){
         this.actualCulture = null;
@@ -26,6 +27,10 @@ public class Plot {
     public Culture getActualCulture() {
         return actualCulture;
     }
+
+    public boolean isLocked() { return locked; }
+
+    public void setLocked(boolean locked) { this.locked = locked; }
 
     public boolean isEstGood(){
         return estGood ;

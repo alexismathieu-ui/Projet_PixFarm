@@ -94,6 +94,7 @@ public class MainController {
 
     private void refreshGrid(){
         farmGrid.getChildren().clear();
+        boolean pricedisplay = false;
 
         for (int i = 0 ; i < farms.getNbLINES(); i++) {
             for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
@@ -103,17 +104,35 @@ public class MainController {
                 Rectangle rect = new Rectangle(80, 80);
                 rect.setStroke(Color.BROWN);
 
-                if (plotting.getActualCulture() == null) {
-                    rect.setFill(Color.SADDLEBROWN);
-                } else if (plotting.getActualCulture().isReady()) {
-                    rect.setFill(Color.GOLD);
-                } else {
-                    rect.setFill(Color.GREEN);
+                if (plotting.isLocked()){
+                    rect.setFill(Color.web("#3d3d3d"));
+                    if (!pricedisplay){
+                        double currentCost = farms.getNextPlotCost();
+                        Label priceLabel = new Label("🛒\n" + (int)currentCost + "$");
+                        priceLabel.setTextFill(Color.GOLD);
+                        priceLabel.setStyle("-fx-font-weight: bold; -fx-text-alignment: center;");
+                        visualCell.getChildren().addAll(rect, priceLabel);
+                        visualCell.setOnMouseClicked(event -> handlePurchasePlot(plotting));
+
+                        pricedisplay = true;
+                    }
+                    else{
+                        Label lockIcon = new Label("🔒");
+                        lockIcon.setTextFill(Color.GRAY);
+                        visualCell.getChildren().addAll(rect, lockIcon);
+                        visualCell.setOnMouseClicked(null);
+                    }
+                }else {
+                    if (plotting.getActualCulture() == null) {
+                        rect.setFill(Color.SADDLEBROWN);
+                    } else if (plotting.getActualCulture().isReady()) {
+                        rect.setFill(Color.GOLD);
+                    } else {
+                        rect.setFill(Color.GREEN);
+                    }
+                    visualCell.getChildren().add(rect);
+                    visualCell.setOnMouseClicked(event -> handleCellClick(plotting));
                 }
-
-                visualCell.getChildren().add(rect);
-                visualCell.setOnMouseClicked(event -> handleCellClick(plotting));
-
                 farmGrid.add(visualCell, j, i);
             }
         }
@@ -140,6 +159,16 @@ public class MainController {
     }
 
     private void handleCellClick(Plot plotting) {
+        if(plotting.isLocked()){
+            double cost = 500;
+            if (farms.spending(cost)){
+                plotting.setLocked(false);
+                labelStatus.setText("Parcelle Achetée");
+                updateUI();
+            }else {
+                labelStatus.setText("Pas assez d'argent ( " + cost + " $ requis)");
+            }
+        }
         if (plotting.isEmpty()) {
             if (farms.getInventory().getQuantity(selectedSeed) > 0) {
                 Culture toplant = createCulture(selectedSeed);
@@ -161,6 +190,20 @@ public class MainController {
             labelStatus.setText("Collected : " + cropName);
         }
         refreshGrid();
+    }
+
+    private void handlePurchasePlot(Plot plotting){
+        double cost = farms.getNextPlotCost();
+
+        if (farms.spending(cost)){
+            plotting.setLocked(false);
+            farms.incrementUnlockedPlots();
+            labelStatus.setText("Nouvelle Terre achetée !");
+
+            updateUI();
+        } else {
+            labelStatus.setText("Il vous manque " + (int)(cost - farms.getMoney()) + "$ !");
+        }
     }
 
     @FXML

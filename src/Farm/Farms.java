@@ -9,14 +9,16 @@ public class Farms {
     private double money;
     private Plot[][] field;
     private ArrayList<Animals> myAnimals = new ArrayList<>();
-    private final int LINES = 5;
-    private final int COLUMNS = 5;
+    private final int LINES = 7;
+    private final int COLUMNS = 10;
     private Inventory inventory;
     private int level = 1;
     private double currentXP = 0;
     private double nextLevelXP = 100;
     public enum Weather { SUNNY, RAINY, THUNDERSTORM, DROUGHT }
     private Weather currentWeather = Weather.SUNNY;
+    private int unlockedPlotsCount = 0; // On commence à 0 (en plus de la ligne gratuite)
+
 
     public Farms(double initialMoney){
         this.money = initialMoney;
@@ -27,6 +29,10 @@ public class Farms {
         for (int i = 0; i < LINES; i++){
             for (int j = 0; j < COLUMNS ; j ++){
                 field[i][j] = new Plot();
+
+                if (i == 0 && j == 0){
+                    field[i][j].setLocked(false);
+                }
             }
         }
     }
@@ -48,6 +54,10 @@ public class Farms {
             return true;
         }
         return false;
+    }
+
+    public double getNextPlotCost() {
+        return 500 + (unlockedPlotsCount * 250);
     }
 
     public void addXP(double amount) {
@@ -90,5 +100,7 @@ public class Farms {
     public Inventory getInventory() { return inventory; }
     public Weather getCurrentWeather() { return currentWeather; }
     public void setCurrentWeather(Weather w) { this.currentWeather = w; }
+    public int getUnlockedPlotsCount() { return unlockedPlotsCount; }
+    public void incrementUnlockedPlots() { this.unlockedPlotsCount++; }
 
 }
