@@ -18,6 +18,10 @@ public class Inventory {
         return ressources.getOrDefault(name, 0);
     }
 
+    public Map<String, Integer> getItems() {
+        return ressources;
+    }
+
     public void empty(){
         ressources.clear();
     }

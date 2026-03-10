@@ -12,6 +12,7 @@ public class GameTimer {
     private Farms farms;
     private Runnable updateUI;
     private Timeline oneminrefr;
+    private Timeline marketTimer;
 
     public GameTimer(Farms farms, Runnable updateUI){
         this.farms = farms;
@@ -26,7 +27,14 @@ public class GameTimer {
             farms.updateWeather();
         }));
         oneminrefr.setCycleCount(Timeline.INDEFINITE);
-        oneminrefr.play();
+
+
+        this.marketTimer = new Timeline(new KeyFrame(Duration.seconds(30), event -> {
+            farms.updateMarketFluctuation();
+            updateUI.run();
+        }));
+        this.marketTimer.setCycleCount(Timeline.INDEFINITE);
+
     }
 
     public void tick(){
@@ -50,6 +58,14 @@ public class GameTimer {
         updateUI.run();
     }
 
-    public void start() {timeline.play();}
-    public void stop() {timeline.stop();}
+    public void start() {
+        timeline.play();
+        oneminrefr.play();
+        marketTimer.play();
+    }
+    public void stop() {
+        timeline.stop();
+        oneminrefr.stop();
+        marketTimer.stop();
+    }
 }

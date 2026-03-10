@@ -2,6 +2,7 @@ package Farm;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -17,7 +18,8 @@ public class Farms {
     private double nextLevelXP = 100;
     public enum Weather { SUNNY, RAINY, THUNDERSTORM, DROUGHT }
     private Weather currentWeather = Weather.SUNNY;
-    private int unlockedPlotsCount = 0; // On commence à 0 (en plus de la ligne gratuite)
+    private int unlockedPlotsCount = 0;
+    private HashMap<String, Integer> marketSales = new HashMap<>();
 
 
     public Farms(double initialMoney){
@@ -33,6 +35,26 @@ public class Farms {
                 if (i == 0 && j == 0){
                     field[i][j].setLocked(false);
                 }
+            }
+        }
+    }
+
+    public double getDemandPrice(String cultureName, double baseSellPrice) {
+        int totalSold = marketSales.getOrDefault(cultureName, 0);
+        double multiplier = Math.max(0.4, 1.0 - (totalSold * 0.02));
+        return baseSellPrice * multiplier;
+    }
+
+    public void recordSale(String cultureName, int quantity) {
+        marketSales.put(cultureName, marketSales.getOrDefault(cultureName, 0) + quantity);
+    }
+
+    public void updateMarketFluctuation() {
+        for (String name : marketSales.keySet()) {
+            int current = marketSales.get(name);
+
+            if (current > -10) {
+                marketSales.put(name, current - 1);
             }
         }
     }
