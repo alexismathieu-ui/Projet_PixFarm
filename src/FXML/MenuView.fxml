@@ -2,18 +2,41 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox alignment="CENTER" spacing="20" prefHeight="400.0" prefWidth="600.0"
-      style="-fx-background-color: #78ab46;" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="FarmController.MenuController">
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="FarmController.MenuController"
+           prefWidth="900" prefHeight="650"
+           stylesheets="@../FarmView/menu.css">
 
-    <Text text="FARM MY FARM" style="-fx-font-size: 50; -fx-fill: white; -fx-font-weight: bold;" />
+    <ImageView fitWidth="900" fitHeight="650" preserveRatio="false">
+        <image>
+            <Image url="@../Sprite/images/Fonds + Graphics/Menu Fond.gif" />
+        </image>
+    </ImageView>
 
-    <VBox fx:id="menuPane" alignment="CENTER" spacing="10">
-        <Button text="Nouvelle Partie" onAction="#handleNewGame" prefWidth="200" styleClass="pixel-button" />
-        <Button fx:id="loadBTN" text="Charger" onAction="#onPlayClicked" prefWidth="200" styleClass="pixel-button" />
-        <Button text="Quitter" onAction="#handleQuit" prefWidth="200" styleClass="pixel-button" />
+    <Region style="-fx-background-color: rgba(0,0,0,0.25);" />
+
+    <VBox alignment="CENTER" spacing="28">
+
+        <ImageView fitWidth="420" preserveRatio="true" smooth="true">
+            <image>
+                <Image url="@../Sprite/images/Fonds + Graphics/MenuLogo.png" />
+            </image>
+            <effect>
+                <DropShadow color="#000000" radius="12" offsetX="4" offsetY="4"/>
+            </effect>
+        </ImageView>
+
+        <VBox fx:id="menuPane" alignment="CENTER" spacing="14" styleClass="menu-panel">
+            <Button text="🌱  Nouvelle Partie" onAction="#handleNewGame" styleClass="menu-btn" />
+            <Button text="📂  Charger Partie"  onAction="#onPlayClicked"  styleClass="menu-btn" />
+            <Button text="✖   Quitter"          onAction="#handleQuit"     styleClass="menu-btn-quit" />
+        </VBox>
+
     </VBox>
 
-</VBox>
+</StackPane>

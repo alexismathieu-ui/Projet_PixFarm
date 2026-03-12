@@ -28,13 +28,8 @@ public class MenuController {
             Parent mainRoot = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            Scene scene = new Scene(mainRoot);
-
-            scene.getStylesheets().add(getClass().getResource("/FarmView/style.css").toExternalForm());
-
-            stage.setScene(scene);
-            stage.setTitle("Farm My Farm - Ma Ferme");
+            stage.setScene(new Scene(mainRoot));
+            stage.setTitle("Pix'Farm - Menu - Game made by AlexisM");
             stage.show();
 
         } catch (IOException e) {

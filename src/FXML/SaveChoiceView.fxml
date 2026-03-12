@@ -2,21 +2,50 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #2c3e50; -fx-border-color: #ecf0f1; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FarmController.SaveChoiceController">
-    <children>
-        <Label text="CHOISIR UNE SAUVEGARDE" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="FarmController.SaveChoiceController"
+           prefWidth="520" prefHeight="480"
+           stylesheets="@../FarmView/savechoice.css">
 
-        <VBox spacing="10.0">
-            <Button fx:id="slot1Btn" maxWidth="Infinity" onAction="#selectSlot1" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;" text="Slot 1 : Vide" />
-            <Button fx:id="slot2Btn" maxWidth="Infinity" onAction="#selectSlot2" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;" text="Slot 2 : Vide" />
-            <Button fx:id="slot3Btn" maxWidth="Infinity" onAction="#selectSlot3" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;" text="Slot 3 : Vide" />
+    <ImageView fitWidth="520" fitHeight="480" preserveRatio="false" opacity="0.35">
+        <image>
+            <Image url="@../Sprite/images/Fonds + Graphics/MenuChoiceFonds.png" />
+        </image>
+    </ImageView>
+
+    <Region style="-fx-background-color: rgba(10,5,0,0.75);" />
+
+    <VBox alignment="CENTER" spacing="18" styleClass="save-root">
+        <padding>
+            <Insets top="28" bottom="28" left="32" right="32" />
+        </padding>
+
+        <Label text="💾  CHOISIR UNE FERME" styleClass="save-title" />
+
+        <Region styleClass="save-separator" prefHeight="2" maxWidth="340" />
+
+        <VBox spacing="10" alignment="CENTER">
+            <HBox spacing="8" alignment="CENTER">
+                <Button fx:id="slot1Btn" onAction="#selectSlot1" styleClass="slot-btn" text="🌾  SLOT 1  —  Vide" />
+                <Button onAction="#deleteSlot1" styleClass="delete-btn" text="🗑" />
+            </HBox>
+            <HBox spacing="8" alignment="CENTER">
+                <Button fx:id="slot2Btn" onAction="#selectSlot2" styleClass="slot-btn" text="🌾  SLOT 2  —  Vide" />
+                <Button onAction="#deleteSlot2" styleClass="delete-btn" text="🗑" />
+            </HBox>
+            <HBox spacing="8" alignment="CENTER">
+                <Button fx:id="slot3Btn" onAction="#selectSlot3" styleClass="slot-btn" text="🌾  SLOT 3  —  Vide" />
+                <Button onAction="#deleteSlot3" styleClass="delete-btn" text="🗑" />
+            </HBox>
         </VBox>
 
-        <Button onAction="#close" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Annuler" />
-    </children>
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
-</VBox>
+        <Region styleClass="save-separator" prefHeight="2" maxWidth="340" />
+
+        <Button onAction="#close" styleClass="cancel-btn" text="✖  Annuler" />
+
+    </VBox>
+</StackPane>

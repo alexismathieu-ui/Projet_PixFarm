@@ -11,9 +11,7 @@ public class MainApp extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MenuView.fxml"));
         Scene scene = new Scene(loader.load());
 
-        scene.getStylesheets().add(getClass().getResource("/FarmView/style.css").toExternalForm());
-
-        primaryStage.setTitle("Farm My Farm - By Alexis");
+        primaryStage.setTitle("Pix'Farm");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

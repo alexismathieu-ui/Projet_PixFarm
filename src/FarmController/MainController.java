@@ -49,11 +49,7 @@ public class MainController {
         if (this.farms == null){
             this.farms = new Farms(10000);
         }
-
         refreshGrid();
-
-        this.gameTimer = new GameTimer(farms, this::updateUI);
-        this.gameTimer.start();
     }
 
     private void updateUI(){
@@ -74,17 +70,6 @@ public class MainController {
             barnButton.setText("Grange (Niv. 5)");
         }
 
-        for (int i = 0; i < farms.getNbLINES(); i++) {
-            for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
-                Plot plot = farms.getField()[i][j];
-
-                if (!plot.isEmpty() && plot.getActualCulture() != null) {
-                    plot.getActualCulture().growing(0.7);
-
-                }
-            }
-        }
-
         String weatherText = switch (farms.getCurrentWeather()) {
             case SUNNY -> "☀️ Soleil (x1)";
             case RAINY -> "🌧️ Pluie (x1.5)";
@@ -96,55 +81,110 @@ public class MainController {
         refreshGrid();
     }
 
+    private Image textureSol  = null;
+    private Image textureGrass = null;
+
+    private Image getTextureSol() {
+        if (textureSol == null) {
+            java.io.InputStream is = getClass().getResourceAsStream("/Sprite/images/Sol.png");
+            if (is != null) textureSol = new Image(is);
+        }
+        return textureSol;
+    }
+
+    private Image getTextureGrass() {
+        if (textureGrass == null) {
+            java.io.InputStream is = getClass().getResourceAsStream("/Sprite/images/Grass.png");
+            if (is != null) textureGrass = new Image(is);
+        }
+        return textureGrass;
+    }
+
+    private ImageView makeCell(Image texture, int size) {
+        ImageView iv = new ImageView(texture);
+        iv.setFitWidth(size);
+        iv.setFitHeight(size);
+        iv.setPreserveRatio(false);
+        return iv;
+    }
+
     private void refreshGrid(){
         farmGrid.getChildren().clear();
         boolean pricedisplay = false;
+
+        final int CELL = 82;
 
         for (int i = 0 ; i < farms.getNbLINES(); i++) {
             for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
                 Plot plotting = farms.getField()[i][j];
 
                 StackPane visualCell = new StackPane();
-                Rectangle rect = new Rectangle(80, 80);
-                rect.setStroke(Color.BROWN);
+                visualCell.setPrefSize(CELL, CELL);
+                visualCell.setMaxSize(CELL, CELL);
 
-                if (plotting.isLocked()){
-                    rect.setFill(Color.web("#3d3d3d"));
-                    if (!pricedisplay){
+                if (plotting.isLocked()) {
+                    Image grass = getTextureGrass();
+                    if (grass != null) {
+                        ImageView bg = makeCell(grass, CELL);
+                        bg.setOpacity(0.35);
+                        visualCell.getChildren().add(bg);
+                    } else {
+                        Rectangle r = new Rectangle(CELL, CELL, Color.web("#3d3d3d"));
+                        visualCell.getChildren().add(r);
+                    }
+
+                    if (!pricedisplay) {
                         double currentCost = farms.getNextPlotCost();
                         Label priceLabel = new Label("🛒\n" + (int)currentCost + "$");
-                        rect.setFill(Color.web("#5a5a5a"));
-                        rect.setStroke(Color.GOLD);
                         priceLabel.setTextFill(Color.GOLD);
-                        priceLabel.setStyle("-fx-font-weight: bold; -fx-text-alignment: center;");
-                        visualCell.getChildren().addAll(rect, priceLabel);
+                        priceLabel.setStyle("-fx-font-weight: bold; -fx-text-alignment: center; -fx-font-family: 'Courier New'; -fx-font-size: 12px;");
+                        visualCell.setStyle("-fx-border-color: gold; -fx-border-width: 2;");
+                        visualCell.getChildren().add(priceLabel);
                         visualCell.setOnMouseClicked(event -> handlePurchasePlot(plotting));
-
                         pricedisplay = true;
-                    }
-                    else{
+                    } else {
                         Label lockIcon = new Label("🔒");
-                        lockIcon.setTextFill(Color.GRAY);
-                        visualCell.getChildren().addAll(rect, lockIcon);
+                        lockIcon.setStyle("-fx-font-size: 20px;");
+                        visualCell.getChildren().add(lockIcon);
                         visualCell.setOnMouseClicked(null);
                     }
-                }else {
-                    if (plotting.getActualCulture() == null) {
-                        rect.setFill(Color.SADDLEBROWN);
-                        visualCell.getChildren().add(rect);
-                    } else {
-                        if (plotting.getActualCulture().isReady()) {
-                            rect.setFill(Color.GOLD);
-                        } else {
-                            rect.setFill(Color.GREEN);
-                        }
-                        visualCell.getChildren().add(rect);
 
-                        double progRatio = plotting.getActualCulture().getProgression();
-                        Label progLabel = new Label((int)(progRatio * 100) + "%");
-                        progLabel.setTextFill(Color.WHITE);
-                        progLabel.setStyle("-fx-font-weight: bold;");
-                        visualCell.getChildren().add(progLabel);
+                } else {
+                    Image sol = getTextureSol();
+                    if (sol != null) {
+                        visualCell.getChildren().add(makeCell(sol, CELL));
+                    } else {
+                        Rectangle r = new Rectangle(CELL, CELL, Color.SADDLEBROWN);
+                        visualCell.getChildren().add(r);
+                    }
+                    visualCell.setStyle("-fx-border-color: #5c3010; -fx-border-width: 1;");
+
+                    if (plotting.getActualCulture() != null) {
+                        Culture culture = plotting.getActualCulture();
+                        double progRatio = culture.getProgression();
+
+                        int stage = (progRatio >= 0.66) ? 3 : (progRatio >= 0.33) ? 2 : 1;
+                        String cropName = culture.getName();
+                        String spritePath = "/Sprite/images/Grow/" + cropName + "/" + cropName + " " + stage + ".png";
+
+                        try {
+                            java.io.InputStream is = getClass().getResourceAsStream(spritePath);
+                            if (is != null) {
+                                ImageView cropView = new ImageView(new Image(is));
+                                cropView.setFitWidth(CELL - 10);
+                                cropView.setFitHeight(CELL - 10);
+                                cropView.setPreserveRatio(true);
+                                visualCell.getChildren().add(cropView);
+                            }
+                        } catch (Exception ignored) {}
+
+                        if (culture.isReady()) {
+                            Label readyLabel = new Label("✅");
+                            readyLabel.setStyle("-fx-font-size: 15px;");
+                            StackPane.setAlignment(readyLabel, javafx.geometry.Pos.BOTTOM_CENTER);
+                            visualCell.getChildren().add(readyLabel);
+                            visualCell.setStyle("-fx-border-color: gold; -fx-border-width: 2;");
+                        }
                     }
                     visualCell.setOnMouseClicked(event -> handleCellClick(plotting));
                 }

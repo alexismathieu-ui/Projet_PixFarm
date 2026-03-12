@@ -1,0 +1,80 @@
+.root {
+    -fx-font-family: "Courier New", monospace;
+}
+
+.menu-btn {
+    -fx-background-color: #f5c518, #e8a800, #c47f00;
+    -fx-background-insets: 0, 3 3 0 0, 4 4 0 0;
+    -fx-background-radius: 0, 0, 0;
+    -fx-border-color: #3b1f05;
+    -fx-border-width: 3px;
+    -fx-border-radius: 0;
+    -fx-text-fill: #3b1f05;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+    -fx-pref-width: 300px;
+    -fx-pref-height: 60px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 0, 4, 4, 0);
+    -fx-padding: 8 20 8 20;
+}
+
+.menu-btn:hover {
+    -fx-background-color: #ffe066, #f5c518, #e8a800;
+    -fx-text-fill: #1a0a00;
+    -fx-effect: dropshadow(three-pass-box, rgba(255,200,0,0.5), 8, 0, 0, 0),
+                dropshadow(three-pass-box, rgba(0,0,0,0.7), 0, 5, 5, 0);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.menu-btn:pressed {
+    -fx-background-color: #c47f00, #e8a800, #f5c518;
+    -fx-background-insets: 4 4 0 0, 2 2 0 0, 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 0, 1, 1, 0);
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-translate-y: 3px;
+}
+
+
+.menu-btn-quit {
+    -fx-background-color: #d94040, #b52e2e, #8f1f1f;
+    -fx-background-insets: 0, 3 3 0 0, 4 4 0 0;
+    -fx-background-radius: 0, 0, 0;
+    -fx-border-color: #3b1f05;
+    -fx-border-width: 3px;
+    -fx-border-radius: 0;
+    -fx-text-fill: #fff8e7;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+    -fx-pref-width: 300px;
+    -fx-pref-height: 60px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 0, 4, 4, 0);
+    -fx-padding: 8 20 8 20;
+}
+
+.menu-btn-quit:hover {
+    -fx-background-color: #ff6060, #d94040, #b52e2e;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(three-pass-box, rgba(255,60,60,0.5), 8, 0, 0, 0),
+                dropshadow(three-pass-box, rgba(0,0,0,0.7), 0, 5, 5, 0);
+}
+
+.menu-btn-quit:pressed {
+    -fx-background-color: #8f1f1f, #b52e2e, #d94040;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-translate-y: 3px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 0, 1, 1, 0);
+}
+
+.menu-panel {
+    -fx-background-color: rgba(30, 15, 5, 0);
+    -fx-padding: 30 40 30 40;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 15, 0, 0, 0);
+}

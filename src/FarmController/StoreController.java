@@ -70,7 +70,7 @@ public class StoreController {
         updateButtonState(Lemon_Seed, 6);
         updateButtonState(Strawberry_Seed, 7);
         updateButtonState(Corn_Seed, 10);
-        updateButtonState(Pineapple_Seed, 20);
+        updateButtonState(Pineapple_Seed, 15);
 
         updatePriceLabel(wheatSellLabel, new Wheat());
         updatePriceLabel(carrotSellLabel, new Carrot());

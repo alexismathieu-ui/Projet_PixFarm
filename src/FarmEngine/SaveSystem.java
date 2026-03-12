@@ -193,7 +193,7 @@ public class SaveSystem {
     public static String getSaveSummary(int slot) {
         File file = new File("saves/save" + slot + ".txt");
         if (!file.exists()) {
-            return "Nouvelle Partie\nEmplacement vide";
+            return "Nouvelle Partie";
         }
 
         try (Scanner scanner = new Scanner(file)) {
