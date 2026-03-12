@@ -1,133 +1,200 @@
 package FarmController;
 
 import Farm.Animals;
+import Farm.Enclosure.Enclosure;
+import Farm.Enclosure.EnclosureManager;
 import Farm.Farms;
-import FarmController.MainController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.fxml.FXML;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.util.Stack;
 
 public class BarnController {
 
-    @FXML
-    private BorderPane barnRoot;
-    @FXML
-    private GridPane animalGrid;
+    @FXML private BorderPane barnRoot;
+    @FXML private GridPane enclosureGrid;
     @FXML private Label levelLabel;
     @FXML private ProgressBar xpBar;
     @FXML private Label xpLabel;
-    @FXML
-    private Label animalCountLabel;
-    @FXML
-    private Label labelStatus;
+    @FXML private Label animalCountLabel;
+    @FXML private Label readyCountLabel;
+    @FXML private Label hungryCountLabel;
+    @FXML private Label enclosureCountLabel;
+    @FXML private Label labelStatus;
+    @FXML private Label bottomStatus;
 
     private Farms farms;
+    private EnclosureManager enclosureManager;
     private InventoryController currentInventoryCtrl;
 
     public void setFarms(Farms farms) {
         this.farms = farms;
-        Timeline autoRefresh = new Timeline(new KeyFrame(Duration.millis(700), event -> {
+
+        // Init enclosure manager from Farms (or create new)
+        if (farms.getEnclosureManager() == null) {
+            this.enclosureManager = new EnclosureManager();
+            farms.setEnclosureManager(this.enclosureManager);
+        } else {
+            this.enclosureManager = farms.getEnclosureManager();
+        }
+
+        // Auto-refresh every 700ms
+        Timeline autoRefresh = new Timeline(new KeyFrame(Duration.millis(700), e -> {
             updateLevelUI();
-            refreshAnimalGrid();
+            refreshEnclosureGrid();
+            updateStats();
         }));
         autoRefresh.setCycleCount(Timeline.INDEFINITE);
         autoRefresh.play();
-    }
-    private void updateLevelUI(){
-        if (levelLabel != null && xpBar != null){
-            levelLabel.setText("Niveau " + farms.getLevel());
 
+        refreshEnclosureGrid();
+        updateStats();
+        updateLevelUI();
+    }
+
+    private void updateLevelUI() {
+        if (levelLabel != null) {
+            levelLabel.setText("Niveau " + farms.getLevel());
             double progress = farms.getCurrentXP() / farms.getNextLevelXP();
             xpBar.setProgress(progress);
-
-            if (xpLabel != null) {
+            if (xpLabel != null)
                 xpLabel.setText((int)farms.getCurrentXP() + " / " + (int)farms.getNextLevelXP() + " XP");
-            }
         }
     }
 
-    private void refreshAnimalGrid() {
-        animalGrid.getChildren().clear();
+    private void updateStats() {
+        int total = enclosureManager.getTotalAnimals();
+        int ready = enclosureManager.getTotalReady();
+        int hungry = enclosureManager.getTotalHungry();
+        int enclCount = enclosureManager.getEnclosures().size();
+        int maxEncl = enclosureManager.getMaxEnclosures();
 
-        int col = 0;
-        int row = 0;
+        animalCountLabel.setText("🐾 Animaux : " + total);
+        readyCountLabel.setText("✅ Prêts : " + ready);
+        hungryCountLabel.setText("🍽️ Affamés : " + hungry);
+        enclosureCountLabel.setText("🏠 Enclos : " + enclCount + "/" + maxEncl);
+    }
 
-        for (Animals animals : farms.getMyAnimals()){
-            StackPane card = new StackPane();
-            Rectangle background = new Rectangle(120,120);
-            background.setFill(Color.web("#8D6E63"));
-            background.setArcWidth(15);
-            background.setArcHeight(15);
+    private void refreshEnclosureGrid() {
+        enclosureGrid.getChildren().clear();
+        int col = 0, row = 0;
+        int maxCols = 3;
 
-            VBox info = new VBox(5);
-            info.setAlignment(Pos.CENTER);
-            Label name = new Label(animals.getSpecies());
-            name.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
-
-            Label statusLabel = new Label();
-            if (animals.hasProduced()) {
-                statusLabel.setText("PRÊT ! (Récolter)");
-                statusLabel.setStyle("-fx-text-fill: #00FF00; -fx-font-weight: bold;");
-            } else if (animals.isHungry()) {
-                statusLabel.setText("A FAIM (Donner : " + animals.getFoodNeeded() + ")");
-                statusLabel.setStyle("-fx-text-fill: #FF5555;");
-            } else {
-                statusLabel.setText("Travaille...");
-                statusLabel.setStyle("-fx-text-fill: #FFFF00;");
-            }
-
-            info.getChildren().addAll(name, statusLabel);
-            card.getChildren().addAll(background, info);
-
+        for (Enclosure encl : enclosureManager.getEnclosures()) {
+            VBox card = buildEnclosureCard(encl);
+            enclosureGrid.add(card, col, row);
             col++;
-            if (col > 4){col = 0; row++;}
-
-            card.setOnMouseClicked(event -> {
-                if (animals.hasProduced()) {
-                    farms.getInventory().add(animals.getProductType() + "_Crop", 1);
-                    farms.addXP(50);
-                    animals.setProduced(false);
-                    animals.setHungry(true);
-                    System.out.println("Récolté : " + animals.getProductType());
-                }
-                else if (animals.isHungry()) {
-                    String food = animals.getFoodNeeded();
-                    if (farms.getInventory().getQuantity(food) > 0) {
-                        farms.getInventory().add(food, -1);
-                        farms.addXP(25);
-                        animals.setHungry(false);
-                        System.out.println(animals.getSpecies() + " mange et commence à produire...");
-                    } else {
-                        System.out.println("Tu n'as pas de " + food + " !");
-                    }
-                }
-                else {
-                    System.out.println("Laisse-le tranquille, il travaille !");
-                }
-                refreshAnimalGrid();
-                refreshInventoryUI();
-            });
-            animalGrid.add(card, col, row);
+            if (col >= maxCols) { col = 0; row++; }
         }
-        animalCountLabel.setText("Animals : " + farms.getMyAnimals().size());
+    }
+
+    private VBox buildEnclosureCard(Enclosure encl) {
+        VBox card = new VBox(6);
+        card.setAlignment(Pos.CENTER);
+        card.getStyleClass().add("enclosure-card");
+
+        // Choose card style based on status
+        if (encl.isEmpty()) {
+            card.getStyleClass().add("enclosure-card-empty");
+        } else if (encl.getReadyCount() > 0) {
+            card.getStyleClass().add("enclosure-card-ready");
+        } else if (encl.getHungryCount() > 0) {
+            card.getStyleClass().add("enclosure-card-hungry");
+        }
+
+        // Name
+        Label nameLabel = new Label(encl.getName());
+        nameLabel.getStyleClass().add("enclosure-name");
+
+        // Big emoji
+        Label emojiLabel = new Label(getEnclosureEmoji(encl));
+        emojiLabel.getStyleClass().add("enclosure-emoji");
+
+        // Capacity bar
+        ProgressBar capBar = new ProgressBar(encl.isEmpty() ? 0 : (double) encl.getAnimalCount() / encl.getMaxCapacity());
+        capBar.getStyleClass().add("capacity-bar");
+
+        // Count
+        Label countLabel = new Label(encl.getAnimalCount() + " / " + encl.getMaxCapacity() + " animaux");
+        countLabel.getStyleClass().add("enclosure-count");
+
+        // Status
+        Label statusLabel = new Label(getEnclosureStatus(encl));
+        if (encl.isEmpty()) statusLabel.getStyleClass().add("enclosure-status-empty");
+        else if (encl.getReadyCount() > 0) statusLabel.getStyleClass().add("enclosure-status-ready");
+        else if (encl.getHungryCount() > 0) statusLabel.getStyleClass().add("enclosure-status-hungry");
+        else statusLabel.getStyleClass().add("enclosure-status-working");
+
+        card.getChildren().addAll(nameLabel, emojiLabel, capBar, countLabel, statusLabel);
+
+        // Click → open enclosure detail
+        card.setOnMouseClicked(e -> openEnclosureDetail(encl));
+
+        return card;
+    }
+
+    private String getEnclosureEmoji(Enclosure encl) {
+        if (encl.isEmpty()) return "🌿";
+        String species = encl.getDominantSpecies();
+        return switch (species) {
+            case "Chicken" -> "🐔";
+            case "Cow"     -> "🐄";
+            case "Sheep"   -> "🐑";
+            case "Pig"     -> "🐷";
+            default        -> "🐾";
+        };
+    }
+
+    private String getEnclosureStatus(Enclosure encl) {
+        if (encl.isEmpty()) return "Vide — Cliquer pour gérer";
+        if (encl.getReadyCount() > 0) return "✅ " + encl.getReadyCount() + " prêt(s) à récolter !";
+        if (encl.getHungryCount() > 0) return "🍽️ " + encl.getHungryCount() + " affamé(s) !";
+        return "⚙️ En production...";
+    }
+
+    private void openEnclosureDetail(Enclosure encl) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/EnclosureView.fxml"));
+            Parent root = loader.load();
+            EnclosureController ctrl = loader.getController();
+            ctrl.setData(farms, enclosureManager, encl);
+            ctrl.setOnClose(() -> {
+                refreshEnclosureGrid();
+                updateStats();
+            });
+
+            Stage stage = new Stage();
+            stage.setTitle("Enclos — " + encl.getName());
+            stage.initOwner(barnRoot.getScene().getWindow());
+            stage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onAddEnclosure() {
+        if (!enclosureManager.canAddMoreEnclosures()) {
+            setStatus("❌ Nombre maximum d'enclos atteint !");
+            return;
+        }
+        int n = enclosureManager.getEnclosures().size() + 1;
+        enclosureManager.addEnclosure("Enclos " + n, 4);
+        refreshEnclosureGrid();
+        updateStats();
+        setStatus("✅ Enclos " + n + " créé !");
     }
 
     @FXML
@@ -136,7 +203,6 @@ public class BarnController {
         Parent root = loader.load();
         MainController mainCtrl = loader.getController();
         mainCtrl.setFarms(this.farms);
-
         Stage stage = (Stage) barnRoot.getScene().getWindow();
         stage.getScene().setRoot(root);
     }
@@ -146,21 +212,16 @@ public class BarnController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/AnimalShopView.fxml"));
             Parent root = loader.load();
-
-            AnimalShopController storeCtrl = loader.getController();
-            storeCtrl.setFarms(this.farms);
-
-            storeCtrl.setOnUpdateCallback(() -> {
-                refreshAnimalGrid();
+            AnimalShopController ctrl = loader.getController();
+            ctrl.setFarms(this.farms);
+            ctrl.setOnUpdateCallback(() -> {
+                refreshEnclosureGrid();
+                updateStats();
             });
-
             Stage stage = new Stage();
             stage.setTitle("Marchand d'animaux");
-
-            stage.initOwner(animalGrid.getScene().getWindow());
+            stage.initOwner(barnRoot.getScene().getWindow());
             stage.initModality(javafx.stage.Modality.WINDOW_MODAL);
-
-
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
@@ -168,32 +229,25 @@ public class BarnController {
         }
     }
 
-    private void refreshInventoryUI(){
-        if(currentInventoryCtrl != null){
+    @FXML
+    private void onOpenInventory() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/InventoryView.fxml"));
+            Parent root = loader.load();
+            currentInventoryCtrl = loader.getController();
             currentInventoryCtrl.update(this.farms);
+            Stage stage = new Stage();
+            stage.setTitle("Inventaire");
+            stage.setScene(new Scene(root));
+            stage.setOnCloseRequest(e -> currentInventoryCtrl = null);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    @FXML
-    private void onOpenInventory() {
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/InventoryView.fxml"));
-            Parent root = loader.load();
-
-
-
-            currentInventoryCtrl = loader.getController();
-            currentInventoryCtrl.update(this.farms);
-
-            Stage inventoryStage = new Stage();
-            inventoryStage.setTitle("Inventory");
-            inventoryStage.setScene(new Scene(root));
-
-            inventoryStage.setOnCloseRequest(e -> currentInventoryCtrl = null);
-
-            inventoryStage.show();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+    private void setStatus(String msg) {
+        if (labelStatus != null) labelStatus.setText(msg);
+        if (bottomStatus != null) bottomStatus.setText(msg);
     }
 }

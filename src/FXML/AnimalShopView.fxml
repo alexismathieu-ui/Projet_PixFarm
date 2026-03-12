@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox spacing="15" alignment="CENTER" prefWidth="300" style="-fx-padding: 20; -fx-background-color: #3E2723;"
-      xmlns:fx="http://javafx.com/fxml" fx:controller="FarmController.AnimalShopController">
+<VBox spacing="16" alignment="CENTER"
+      prefWidth="340" prefHeight="460"
+      styleClass="shop-root"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="FarmController.AnimalShopController"
+      stylesheets="@../FarmView/barn.css">
 
-    <Label fx:id="moneyLabel" style="-fx-text-fill: white; -fx-font-size: 18;"/>
+    <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
 
-    <Label text="BOUTIQUE D'ANIMAUX" style="-fx-text-fill: #FFCCBC; -fx-font-weight: bold;"/>
+    <Label text="🐄 MARCHANDE D'ANIMAUX 🐔" styleClass="shop-title"/>
+    <Label fx:id="moneyLabel" text="Argent : 0 $" styleClass="shop-money"/>
 
-    <Button text="Poulet (5 000$)" fx:id="Chicken_Btn" onAction="#buyChicken" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
-    <Button text="Mouton (10 000$)" fx:id="Sheep_Btn" onAction="#buySheep" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
-    <Button text="Vache (50 000$)" fx:id="Cow_Btn" onAction="#buyCow" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
-    <Button text="Cochon (100 000$)" fx:id="Pig_Btn" onAction="#buyPig" maxWidth="Infinity" style="-fx-background-color: #8D6E63; -fx-text-fill: white;"/>
+    <Separator style="-fx-background-color: #c47f00; -fx-pref-height: 2;"/>
+
+    <Label text="Cliquez sur un animal pour l'acheter.\nIl sera ajouté à votre liste — placez-le ensuite dans un enclos !"
+           style="-fx-text-fill: #a89070; -fx-font-size: 11px; -fx-font-family: 'Courier New', monospace; -fx-text-alignment: center;"
+           wrapText="true"/>
+
+    <Button text="🐔  Poulet    —  5 000 $"   fx:id="Chicken_Btn" onAction="#buyChicken" maxWidth="Infinity" styleClass="shop-btn"/>
+    <Button text="🐑  Mouton   — 10 000 $"   fx:id="Sheep_Btn"   onAction="#buySheep"   maxWidth="Infinity" styleClass="shop-btn"/>
+    <Button text="🐄  Vache    — 50 000 $"   fx:id="Cow_Btn"     onAction="#buyCow"     maxWidth="Infinity" styleClass="shop-btn"/>
+    <Button text="🐷  Cochon  — 100 000 $"   fx:id="Pig_Btn"     onAction="#buyPig"     maxWidth="Infinity" styleClass="shop-btn"/>
+
+    <Label fx:id="feedbackLabel" text="" wrapText="true"
+           style="-fx-text-fill: #56d64a; -fx-font-size: 12px; -fx-font-family: 'Courier New', monospace; -fx-text-alignment: center;"/>
 </VBox>

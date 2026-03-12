@@ -86,7 +86,7 @@ public class MainController {
 
     private Image getTextureSol() {
         if (textureSol == null) {
-            java.io.InputStream is = getClass().getResourceAsStream("/Sprite/images/Sol.png");
+            java.io.InputStream is = getClass().getResourceAsStream("/Sprite/images/Fonds + Graphics/Sol.png");
             if (is != null) textureSol = new Image(is);
         }
         return textureSol;
@@ -94,7 +94,7 @@ public class MainController {
 
     private Image getTextureGrass() {
         if (textureGrass == null) {
-            java.io.InputStream is = getClass().getResourceAsStream("/Sprite/images/Grass.png");
+            java.io.InputStream is = getClass().getResourceAsStream("/Sprite/images/Fonds + Graphics/Grass.png");
             if (is != null) textureGrass = new Image(is);
         }
         return textureGrass;
@@ -171,8 +171,8 @@ public class MainController {
                             java.io.InputStream is = getClass().getResourceAsStream(spritePath);
                             if (is != null) {
                                 ImageView cropView = new ImageView(new Image(is));
-                                cropView.setFitWidth(CELL - 10);
-                                cropView.setFitHeight(CELL - 10);
+                                cropView.setFitWidth(CELL - 30);
+                                cropView.setFitHeight(CELL - 30);
                                 cropView.setPreserveRatio(true);
                                 visualCell.getChildren().add(cropView);
                             }

@@ -1,5 +1,6 @@
 package Farm;
 
+import Farm.Enclosure.EnclosureManager;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -143,4 +144,9 @@ public class Farms {
     public void setQuestResetTime(long time) { this.questResetTime = time; }
     public int getCurrentSaveSlot() { return currentSaveSlot; }
     public void setCurrentSaveSlot(int slot) { this.currentSaveSlot = slot; }
+
+    // ---- Enclosure Manager ----
+    private EnclosureManager enclosureManager;
+    public EnclosureManager getEnclosureManager() { return enclosureManager; }
+    public void setEnclosureManager(EnclosureManager mgr) { this.enclosureManager = mgr; }
 }

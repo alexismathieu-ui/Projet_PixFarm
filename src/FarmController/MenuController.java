@@ -22,45 +22,6 @@ public class MenuController {
     @FXML private Button slot1Btn;
 
     @FXML
-    public void handleNewGame(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MainView.fxml"));
-            Parent mainRoot = loader.load();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(mainRoot));
-            stage.setTitle("Pix'Farm - Menu - Game made by AlexisM");
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Erreur lors du chargement de la ferme.");
-        }
-    }
-
-    @FXML
-    public void handleLoadGame(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MainView.fxml"));
-            Parent root = loader.load();
-
-
-            MainController mainCtrl = loader.getController();
-            Farms currentFarm = mainCtrl.getFarms();
-
-            FarmEngine.SaveSystem.load(currentFarm, 1);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-            System.out.println("Partie chargée avec succès !");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
     private void onPlayClicked() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/SaveChoiceView.fxml"));

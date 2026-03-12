@@ -12,6 +12,7 @@ public class AnimalShopController {
     private Runnable onUpdateCallback;
 
     @FXML private Label moneyLabel;
+    @FXML private Label feedbackLabel;
 
     @FXML private Button Sheep_Btn;
     @FXML private Button Cow_Btn;
@@ -44,6 +45,10 @@ public class AnimalShopController {
         updateButtonState(Pig_Btn, 15);
     }
 
+    private void setFeedback(String msg) {
+        if (feedbackLabel != null) feedbackLabel.setText(msg);
+    }
+
     @FXML
     private void buyChicken() { buyAnimal(new Chicken()); }
     @FXML
@@ -63,7 +68,7 @@ public class AnimalShopController {
         };
 
         if (farms.getLevel() < requiredLevel) {
-            System.out.println("Niveau " + requiredLevel + " requis pour cet animal !");
+            setFeedback("🔒 Niveau " + requiredLevel + " requis !");
             return;
         }
 
@@ -72,10 +77,10 @@ public class AnimalShopController {
             farms.addAnimals(a);
             updateUI();
             if (onUpdateCallback != null) onUpdateCallback.run();
-            System.out.println(a.getSpecies() + " acheté !");
+            setFeedback("✅ " + a.getSpecies() + " acheté ! Placez-le dans un enclos.");
         }
         else {
-            System.out.println("Pas assez d'argent !");
+            setFeedback("❌ Pas assez d'argent ! (" + (int)a.getBuyPrice() + " $ requis)");
         }
     }
 }

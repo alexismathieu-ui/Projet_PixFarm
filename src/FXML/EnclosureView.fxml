@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="enclosureRoot"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="FarmController.EnclosureController"
+            styleClass="encl-root"
+            prefWidth="700" prefHeight="500"
+            stylesheets="@../FarmView/barn.css">
+
+    <!-- TOP -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="14" styleClass="encl-topbar">
+            <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
+            <Label fx:id="enclosureTitleLabel" text="🏠 Enclos" styleClass="encl-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="capacityLabel" text="0 / 4" styleClass="capacity-label"/>
+            <Button text="✖ Fermer" onAction="#onClose" styleClass="close-btn"/>
+        </HBox>
+    </top>
+
+    <!-- LEFT: Add animal panel -->
+    <left>
+        <VBox spacing="12" styleClass="encl-sidebar">
+            <padding><Insets top="18" right="14" bottom="18" left="14"/></padding>
+            <Label text="➕ AJOUTER" styleClass="encl-sidebar-title"/>
+            <Separator styleClass="barn-sep"/>
+            <Label text="Choisir un animal :" styleClass="encl-hint"/>
+            <ComboBox fx:id="animalComboBox" maxWidth="Infinity" styleClass="animal-combo"
+                      promptText="Sélectionner..."/>
+            <Button text="Ajouter dans l'enclos" onAction="#onAddAnimalToEnclosure"
+                    maxWidth="Infinity" styleClass="add-animal-btn"/>
+            <Separator styleClass="barn-sep"/>
+            <Label text="🐾 ACTIONS GLOBALES" styleClass="encl-sidebar-title"/>
+            <Button text="🌾 Tout Nourrir"    onAction="#onFeedAll"    maxWidth="Infinity" styleClass="feed-btn"/>
+            <Button text="✅ Tout Récolter"   onAction="#onHarvestAll" maxWidth="Infinity" styleClass="harvest-btn-encl"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button text="🗑️ Supprimer l'enclos" onAction="#onDeleteEnclosure"
+                    maxWidth="Infinity" styleClass="delete-btn"/>
+        </VBox>
+    </left>
+
+    <!-- CENTER: Animals grid -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="barn-scroll">
+            <VBox spacing="0">
+                <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                <Label text="ANIMAUX DANS CET ENCLOS" styleClass="section-title"/>
+                <GridPane fx:id="animalGrid" hgap="14" vgap="14" alignment="TOP_LEFT">
+                    <padding><Insets top="12"/></padding>
+                </GridPane>
+                <Label fx:id="emptyLabel" text="🌿 Cet enclos est vide.\nAjoutez des animaux depuis le panneau de gauche !"
+                       styleClass="empty-label" wrapText="true" visible="true"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- BOTTOM STATUS -->
+    <bottom>
+        <HBox alignment="CENTER" styleClass="barn-bottombar">
+            <padding><Insets top="6" right="20" bottom="6" left="20"/></padding>
+            <Label fx:id="statusLabel" text="" styleClass="bottom-status"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
