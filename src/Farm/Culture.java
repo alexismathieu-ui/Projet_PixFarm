@@ -21,9 +21,11 @@ public abstract class Culture {
     public void growing(double amount) {
         if (timeLeft < growthTime) {
             timeLeft += amount;
+            this.timeSec = timeLeft;
 
             if (timeLeft > growthTime) {
                 timeLeft = growthTime;
+                this.timeSec = growthTime;
             }
         }
     }
@@ -40,6 +42,12 @@ public abstract class Culture {
     public boolean isReady(){
         return timeLeft >= growthTime;
     }
+
+    public void setGrowthTime(double growthTime) {this.growthTime = growthTime;}
+
+    public void setTimeLeft(double timeLeft) {this.timeLeft = timeLeft;}
+
+    public double getGrowthTime() {return growthTime;}
 
     public String getName() {return name;}
     public double getBuyPrice() {return buyPrice;}

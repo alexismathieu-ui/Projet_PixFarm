@@ -24,6 +24,9 @@ public class Farms {
     private long nextQuestTime = 0 ;
     private List<Quest> currentQuests = new ArrayList<>();
     private long questResetTime = 0;
+    private int currentSaveSlot = 1;
+
+
 
 
     public Farms(double initialMoney){
@@ -101,7 +104,7 @@ public class Farms {
 
     public void generalQuests(){
         activeQuests.clear();
-        String[] possibleItems = {"Wheat_Crop","Carrot_Crop","Potato_Crop","Tomato_Crop","Kiwi_Crop","Strawberry_Crop","Corn_Crop","Pumpkin_Crop","Egg_Crop","Truff_Crop","Wool_Crop","Milk_Crop",};
+        String[] possibleItems = {"Wheat_Crop","Carrot_Crop","Potato_Crop","Tomato_Crop","Lemon_Crop","Strawberry_Crop","Corn_Crop","Pineapple_Crop","Egg_Crop","Truff_Crop","Wool_Crop","Milk_Crop",};
         Random rand = new Random();
 
         for (int i = 0; i < 3; i ++){
@@ -138,4 +141,6 @@ public class Farms {
     public List<Quest> getCurrentQuests() { return currentQuests; }
     public long getQuestResetTime() { return questResetTime; }
     public void setQuestResetTime(long time) { this.questResetTime = time; }
+    public int getCurrentSaveSlot() { return currentSaveSlot; }
+    public void setCurrentSaveSlot(int slot) { this.currentSaveSlot = slot; }
 }

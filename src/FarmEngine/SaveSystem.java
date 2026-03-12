@@ -14,10 +14,14 @@ import java.io.*;
 import java.util.Scanner;
 
 public class SaveSystem {
-    private static final String FILE_PATH = "saves/save.txt";
 
-    public static void saves(Farms farms){
-        try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH))) {
+    private static String getFilePath(int slot){
+        return "saves/save" + slot + ".txt";
+    }
+
+    public static void saves(Farms farms, int slot){
+        String path = getFilePath(slot);
+        try (PrintWriter writer = new PrintWriter(new FileWriter(path))) {
             writer.println(farms.getMoney());
             writer.println(farms.getLevel());
             writer.println(farms.getCurrentXP());
@@ -25,7 +29,7 @@ public class SaveSystem {
 
             writer.println(farms.getUnlockedPlotsCount());
 
-            String[] types = {"Wheat", "Tomato", "Carrot", "Potato", "Kiwi", "Strawberry", "Corn", "Pumpkin", "Egg", "Truff", "Milk", "Wool"};
+            String[] types = {"Wheat", "Tomato", "Carrot", "Potato", "Lemon", "Strawberry", "Corn", "Pineapple", "Egg", "Truff", "Milk", "Wool"};
             for(String type : types) {
                 writer.println(farms.getInventory().getQuantity(type + "_Seed"));
                 writer.println(farms.getInventory().getQuantity(type + "_Crop"));
@@ -59,15 +63,16 @@ public class SaveSystem {
                 writer.println(q.getTargetItem() + "|" + q.getAmountNeeded() + "|" + q.getRewardMoney() + "|" + q.getRewardXP());
             }
 
-            System.out.println("Partie Sauvegardée dans " + FILE_PATH);
+            System.out.println("Partie Sauvegardée dans " + path);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static void load(Farms farms) {
-        try {
-            File file = new File("saves/save.txt");
-            Scanner scanner = new Scanner(file);
+    public static void load(Farms farms, int slot) {
+        File file = new File(getFilePath(slot));
+        if (!file.exists()) return;
+
+        try (Scanner scanner = new Scanner(file)) {
 
             if (scanner.hasNextLine()) {farms.setMoney(Double.parseDouble(scanner.nextLine()));}
             if (scanner.hasNextLine()) farms.setLevel(Integer.parseInt(scanner.nextLine()));
@@ -79,7 +84,7 @@ public class SaveSystem {
                 for(int i = 0; i < count; i++) farms.incrementUnlockedPlots();
             }
 
-            String[] types = {"Wheat", "Tomato", "Carrot", "Potato", "Kiwi", "Strawberry", "Corn", "Pumpkin", "Egg", "Truff", "Milk", "Wool"};
+            String[] types = {"Wheat", "Tomato", "Carrot", "Potato", "Lemon", "Strawberry", "Corn", "Pineapple", "Egg", "Truff", "Milk", "Wool"};
             for(String type : types) {
                 if(scanner.hasNextLine()) farms.getInventory().add(type + "_Seed", Integer.parseInt(scanner.nextLine()));
                 if(scanner.hasNextLine()) farms.getInventory().add(type + "_Crop", Integer.parseInt(scanner.nextLine()));
@@ -105,15 +110,16 @@ public class SaveSystem {
                                 case "CARROT" -> new Carrot();
                                 case "POTATO" -> new Potato();
                                 case "TOMATO" -> new Tomato();
-                                case "KIWI" -> new Kiwi();
+                                case "LEMON" -> new Lemon();
                                 case "STRAWBERRY" -> new Strawberry();
                                 case "CORN" -> new Corn();
-                                case "PUMPKIN" -> new Pumpkin();
+                                case "PINEAPPLE" -> new Pineapple();
                                 default -> null;
                             };
 
                             if (c != null) {
                                 c.setTimeSec(savedTime);
+                                c.setTimeLeft(savedTime);
                                 farms.getField()[i][j].planting(c);
                             }
                         }
@@ -183,6 +189,23 @@ public class SaveSystem {
         } catch (FileNotFoundException e) {
             System.out.println("No Saves Founds");
         }
+    }
+    public static String getSaveSummary(int slot) {
+        File file = new File("saves/save" + slot + ".txt");
+        if (!file.exists()) {
+            return "Nouvelle Partie\nEmplacement vide";
+        }
+
+        try (Scanner scanner = new Scanner(file)) {
+            if (scanner.hasNextLine()) {
+                double money = Double.parseDouble(scanner.nextLine());
+                int level = Integer.parseInt(scanner.nextLine());
+                return "Niveau " + level + " — " + (int)money + " $";
+            }
+        } catch (Exception e) {
+            return "Sauvegarde corrompue";
+        }
+        return "Nouvelle Partie";
     }
 }
 

@@ -5,6 +5,8 @@
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <VBox alignment="TOP_CENTER" spacing="0" prefWidth="600.0" prefHeight="700.0"
       style="-fx-background-color: #3e2723;"
       xmlns:fx="http://javafx.com/fxml" fx:controller="FarmController.StoreController">
@@ -19,8 +21,16 @@
         <VBox spacing="12" style="-fx-padding: 20;">
 
             <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 5;">
-                <Label text="🌾 Wheat (5 $)" textFill="white" style="-fx-font-size: 16;" />
+                <ImageView fitWidth="32" fitHeight="32" preserveRatio="true">
+                    <image>
+                        <Image url="@../Sprite/images/Icons/BléIC.png" />
+                    </image>
+                </ImageView>
+
+                <Label text="Wheat (5 $)" textFill="white" style="-fx-font-size: 16;" />
+
                 <Region HBox.hgrow="ALWAYS" />
+
                 <VBox alignment="CENTER_RIGHT" spacing="5">
                     <Button text="Acheter" fx:id="Wheat_Seed" onAction="#buySeeds" prefWidth="120"/>
                     <Label fx:id="wheatSellLabel" text="Vente: 8$" textFill="#81c784" style="-fx-font-size: 12;" />
@@ -28,65 +38,121 @@
             </HBox>
 
             <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 5;">
+                <ImageView fitWidth="32" fitHeight="32" preserveRatio="true">
+                    <image>
+                        <Image url="@../Sprite/images/Icons/CarotteIC.png" />
+                    </image>
+                </ImageView>
+
                 <Label text="Carrot (180 $)" textFill="white" style="-fx-font-size: 16;" />
+
                 <Region HBox.hgrow="ALWAYS" />
+
                 <VBox alignment="CENTER_RIGHT" spacing="5">
                     <Button text="Acheter" fx:id="Carrot_Seed" onAction="#buySeeds" prefWidth="120"/>
-                    <Label fx:id="carrotSellLabel" text="Vente: 200$" textFill="#81c784" style="-fx-font-size: 12;" />
+                    <Label fx:id="carrotSellLabel" text="Vente: 400$" textFill="#81c784" style="-fx-font-size: 12;" />
                 </VBox>
             </HBox>
 
             <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 5;">
-                <Label text="🥔 Potato (850 $)" textFill="white" style="-fx-font-size: 16;" />
+                <ImageView fitWidth="32" fitHeight="32" preserveRatio="true">
+                    <image>
+                        <Image url="@../Sprite/images/Icons/PatateIC.png" />
+                    </image>
+                </ImageView>
+
+                <Label text="Potato (850 $)" textFill="white" style="-fx-font-size: 16;" />
+
                 <Region HBox.hgrow="ALWAYS" />
+
                 <VBox alignment="CENTER_RIGHT" spacing="5">
                     <Button text="Acheter" fx:id="Potato_Seed" onAction="#buySeeds" prefWidth="120"/>
-                    <Label fx:id="potatoSellLabel" text="Vente: 900$" textFill="#81c784" style="-fx-font-size: 12;" />
+                    <Label fx:id="potatoSellLabel" text="Vente: 2100$" textFill="#81c784" style="-fx-font-size: 12;" />
                 </VBox>
             </HBox>
 
             <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 5;">
-                <Label text="🍅 Tomato (3.5K $)" textFill="white" style="-fx-font-size: 16;" />
+                <ImageView fitWidth="32" fitHeight="32" preserveRatio="true">
+                    <image>
+                        <Image url="@../Sprite/images/Icons/TomateIC.png" />
+                    </image>
+                </ImageView>
+
+                <Label text="Tomato (3500 $)" textFill="white" style="-fx-font-size: 16;" />
+
                 <Region HBox.hgrow="ALWAYS" />
+
                 <VBox alignment="CENTER_RIGHT" spacing="5">
                     <Button text="Acheter" fx:id="Tomato_Seed" onAction="#buySeeds" prefWidth="120"/>
-                    <Label fx:id="tomatoSellLabel" text="Vente: 4K$" textFill="#81c784" style="-fx-font-size: 12;" />
+                    <Label fx:id="tomatoSellLabel" text="Vente: 6500$" textFill="#81c784" style="-fx-font-size: 12;" />
                 </VBox>
             </HBox>
 
             <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 5;">
-                <Label text="Kiwi (15K $)" textFill="white" style="-fx-font-size: 16;" />
+                <ImageView fitWidth="32" fitHeight="32" preserveRatio="true">
+                    <image>
+                        <Image url="@../Sprite/images/Icons/CitronIC.png" />
+                    </image>
+                </ImageView>
+
+                <Label text="Lemon (15000 $)" textFill="white" style="-fx-font-size: 16;" />
+
                 <Region HBox.hgrow="ALWAYS" />
+
                 <VBox alignment="CENTER_RIGHT" spacing="5">
-                    <Button text="Acheter" fx:id="Kiwi_Seed" onAction="#buySeeds" prefWidth="120"/>
-                    <Label fx:id="kiwiSellLabel" text="Vente: 18K$" textFill="#81c784" style="-fx-font-size: 12;" />
+                    <Button text="Acheter" fx:id="Lemon_Seed" onAction="#buySeeds" prefWidth="120"/>
+                    <Label fx:id="lemonSellLabel" text="Vente: 24000$" textFill="#81c784" style="-fx-font-size: 12;" />
                 </VBox>
             </HBox>
 
             <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 5;">
-                <Label text="🍓 Strawberry (60K $)" textFill="white" style="-fx-font-size: 16;" />
+                <ImageView fitWidth="32" fitHeight="32" preserveRatio="true">
+                    <image>
+                        <Image url="@../Sprite/images/Icons/FraiseIC.png" />
+                    </image>
+                </ImageView>
+
+                <Label text="Strawberry (60000 $)" textFill="white" style="-fx-font-size: 16;" />
+
                 <Region HBox.hgrow="ALWAYS" />
+
                 <VBox alignment="CENTER_RIGHT" spacing="5">
                     <Button text="Acheter" fx:id="Strawberry_Seed" onAction="#buySeeds" prefWidth="120"/>
-                    <Label fx:id="strawberrySellLabel" text="Vente: 70K$" textFill="#81c784" style="-fx-font-size: 12;" />
+                    <Label fx:id="strawberrySellLabel" text="Vente: 150000$" textFill="#81c784" style="-fx-font-size: 12;" />
                 </VBox>
             </HBox>
 
             <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 5;">
-                <Label text="🌽 Corn (250K $)" textFill="white" style="-fx-font-size: 16;" />
+                <ImageView fitWidth="32" fitHeight="32" preserveRatio="true">
+                    <image>
+                        <Image url="@../Sprite/images/Icons/MaisIC.png" />
+                    </image>
+                </ImageView>
+
+                <Label text="Corn (250000 $)" textFill="white" style="-fx-font-size: 16;" />
+
                 <Region HBox.hgrow="ALWAYS" />
+
                 <VBox alignment="CENTER_RIGHT" spacing="5">
                     <Button text="Acheter" fx:id="Corn_Seed" onAction="#buySeeds" prefWidth="120"/>
-                    <Label fx:id="cornSellLabel" text="Vente: 280K$" textFill="#81c784" style="-fx-font-size: 12;" />
+                    <Label fx:id="cornSellLabel" text="Vente: 575000$" textFill="#81c784" style="-fx-font-size: 12;" />
                 </VBox>
             </HBox>
 
             <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 5;">
-                <Label text="🎃 Pumpkin (950K $)" textFill="white" style="-fx-font-size: 16;" />
+                <ImageView fitWidth="32" fitHeight="32" preserveRatio="true">
+                    <image>
+                        <Image url="@../Sprite/images/Icons/ananasIC.png" />
+                    </image>
+                </ImageView>
+
+                <Label text="Pineapple (950000 $)" textFill="white" style="-fx-font-size: 16;" />
+
                 <Region HBox.hgrow="ALWAYS" />
+
                 <VBox alignment="CENTER_RIGHT" spacing="5">
-                    <Button text="Acheter" fx:id="Pumpkin_Seed" onAction="#buySeeds" prefWidth="120"/>
-                    <Label fx:id="pumpkinSellLabel" text="Vente: 1.1M$" textFill="#81c784" style="-fx-font-size: 12;" />
+                    <Button text="Acheter" fx:id="Pineapple_Seed" onAction="#buySeeds" prefWidth="120"/>
+                    <Label fx:id="pineappleSellLabel" text="Vente: 3000000$" textFill="#81c784" style="-fx-font-size: 12;" />
                 </VBox>
             </HBox>
 

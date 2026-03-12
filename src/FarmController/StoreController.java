@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class StoreController {
@@ -19,19 +20,19 @@ public class StoreController {
     @FXML private Button Carrot_Seed;
     @FXML private Button Potato_Seed;
     @FXML private Button Tomato_Seed;
-    @FXML private Button Kiwi_Seed;
+    @FXML private Button Lemon_Seed;
     @FXML private Button Strawberry_Seed;
     @FXML private Button Corn_Seed;
-    @FXML private Button Pumpkin_Seed;
+    @FXML private Button Pineapple_Seed;
 
     @FXML private Label wheatSellLabel;
     @FXML private Label carrotSellLabel;
     @FXML private Label potatoSellLabel;
     @FXML private Label tomatoSellLabel;
-    @FXML private Label kiwiSellLabel;
+    @FXML private Label lemonSellLabel;
     @FXML private Label strawberrySellLabel;
     @FXML private Label cornSellLabel;
-    @FXML private Label pumpkinSellLabel;
+    @FXML private Label pineappleSellLabel;
 
     public void setFarms(Farms farms) {
         this.farms = farms;
@@ -48,10 +49,10 @@ public class StoreController {
             case "Carrot_Crop" -> 400.0;
             case "Potato_Crop" -> 2100.0;
             case "Tomato_Crop" -> 6500.0;
-            case "Kiwi_Crop" -> 24000.0;
+            case "Lemon_Crop" -> 24000.0;
             case "Strawberry_Crop" -> 150000.0;
             case "Corn_Crop" -> 575000.0;
-            case "Pumpkin_Crop" -> 3000000.0;
+            case "Pineapple_Crop" -> 3000000.0;
             default -> 0.0;
         };
     }
@@ -66,19 +67,19 @@ public class StoreController {
         updateButtonState(Carrot_Seed, 2);
         updateButtonState(Potato_Seed, 3);
         updateButtonState(Tomato_Seed, 5);
-        updateButtonState(Kiwi_Seed, 6);
+        updateButtonState(Lemon_Seed, 6);
         updateButtonState(Strawberry_Seed, 7);
         updateButtonState(Corn_Seed, 10);
-        updateButtonState(Pumpkin_Seed, 20);
+        updateButtonState(Pineapple_Seed, 20);
 
         updatePriceLabel(wheatSellLabel, new Wheat());
         updatePriceLabel(carrotSellLabel, new Carrot());
         updatePriceLabel(potatoSellLabel, new Potato());
         updatePriceLabel(tomatoSellLabel, new Tomato());
-        updatePriceLabel(kiwiSellLabel, new Kiwi());
+        updatePriceLabel(lemonSellLabel, new Lemon());
         updatePriceLabel(strawberrySellLabel, new Strawberry());
         updatePriceLabel(cornSellLabel, new Corn());
-        updatePriceLabel(pumpkinSellLabel, new Pumpkin());
+        updatePriceLabel(pineappleSellLabel, new Pineapple());
     }
 
     private void updateButtonState(Button btn, int requiredLevel) {
@@ -159,10 +160,10 @@ public class StoreController {
             case "Carrot_Seed" -> 180.0;
             case "Potato_Seed" -> 850.0;
             case "Tomato_Seed" -> 3500.0;
-            case "Kiwi_Seed" -> 15000.0;
+            case "Lemon_Seed" -> 15000.0;
             case "Strawberry_Seed" -> 60000.0;
             case "Corn_Seed" -> 250000.0;
-            case "Pumpkin_Seed" -> 950000.0;
+            case "Pineapple_Seed" -> 950000.0;
             default -> 0.0;
         };
     }
@@ -174,9 +175,9 @@ public class StoreController {
             case "Carrot_Seed" -> new Carrot();
             case "Tomato_Seed" -> new Tomato();
             case "Strawberry_Seed" -> new Strawberry();
-            case "Kiwi_Seed" -> new Kiwi();
+            case "Lemon_Seed" -> new Lemon();
             case "Corn_Seed" -> new Corn();
-            case "Pumpkin_Seed" -> new Pumpkin();
+            case "Pineapple_Seed" -> new Pineapple();
             default -> null;
         };
     }

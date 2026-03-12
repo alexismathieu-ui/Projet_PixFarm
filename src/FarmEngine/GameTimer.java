@@ -18,13 +18,14 @@ public class GameTimer {
         this.farms = farms;
         this.updateUI = updateUI;
 
-        this.timeline = new Timeline(new KeyFrame(Duration.millis(650), event -> {
+        this.timeline = new Timeline(new KeyFrame(Duration.millis(700), event -> {
             tick();
         }));
         this.timeline.setCycleCount(Timeline.INDEFINITE);
 
         this.oneminrefr = new Timeline(new KeyFrame(Duration.seconds(60),event -> {
             farms.updateWeather();
+            updateUI.run();
         }));
         oneminrefr.setCycleCount(Timeline.INDEFINITE);
 

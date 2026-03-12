@@ -15,6 +15,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -25,25 +27,14 @@ import java.io.IOException;
 import java.util.Random;
 
 public class MainController {
-    @FXML
-    private GridPane farmGrid;
-    @FXML
-    private Label moneyLabel;
-
-    @FXML
-    private Label labelStatus;
-
-    @FXML
-    private Button barnButton;
-
-    @FXML
-    private ProgressBar xpBar;
-
-    @FXML
-    private Label levelLabel;
-
-    @FXML
-    private Label xpLabel;
+    @FXML private GridPane farmGrid;
+    @FXML private Label moneyLabel;
+    @FXML private Label labelStatus;
+    @FXML private Button barnButton;
+    @FXML private ProgressBar xpBar;
+    @FXML private Label levelLabel;
+    @FXML private Label xpLabel;
+    @FXML private Label weatherLabel;
 
     private Farms farms;
     private GameTimer gameTimer;
@@ -52,13 +43,12 @@ public class MainController {
     private InventoryController currentInventoryCtrl;
     private Stage inventoryStage;
     int requiredLevel;
-    @FXML private Label weatherLabel;
 
     @FXML
     public void initialize() {
         if (this.farms == null){
             this.farms = new Farms(10000);
-    }
+        }
 
         refreshGrid();
 
@@ -84,6 +74,17 @@ public class MainController {
             barnButton.setText("Grange (Niv. 5)");
         }
 
+        for (int i = 0; i < farms.getNbLINES(); i++) {
+            for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
+                Plot plot = farms.getField()[i][j];
+
+                if (!plot.isEmpty() && plot.getActualCulture() != null) {
+                    plot.getActualCulture().growing(0.7);
+
+                }
+            }
+        }
+
         String weatherText = switch (farms.getCurrentWeather()) {
             case SUNNY -> "☀️ Soleil (x1)";
             case RAINY -> "🌧️ Pluie (x1.5)";
@@ -91,6 +92,8 @@ public class MainController {
             case DROUGHT -> "🔥Sécheresse (x0.5)";
         };
         weatherLabel.setText("Météo : " + weatherText);
+
+        refreshGrid();
     }
 
     private void refreshGrid(){
@@ -128,12 +131,21 @@ public class MainController {
                 }else {
                     if (plotting.getActualCulture() == null) {
                         rect.setFill(Color.SADDLEBROWN);
-                    } else if (plotting.getActualCulture().isReady()) {
-                        rect.setFill(Color.GOLD);
+                        visualCell.getChildren().add(rect);
                     } else {
-                        rect.setFill(Color.GREEN);
+                        if (plotting.getActualCulture().isReady()) {
+                            rect.setFill(Color.GOLD);
+                        } else {
+                            rect.setFill(Color.GREEN);
+                        }
+                        visualCell.getChildren().add(rect);
+
+                        double progRatio = plotting.getActualCulture().getProgression();
+                        Label progLabel = new Label((int)(progRatio * 100) + "%");
+                        progLabel.setTextFill(Color.WHITE);
+                        progLabel.setStyle("-fx-font-weight: bold;");
+                        visualCell.getChildren().add(progLabel);
                     }
-                    visualCell.getChildren().add(rect);
                     visualCell.setOnMouseClicked(event -> handleCellClick(plotting));
                 }
                 farmGrid.add(visualCell, j, i);
@@ -147,9 +159,9 @@ public class MainController {
             case "Carrot_Seed" -> new Carrot();
             case "Tomato_Seed" -> new Tomato();
             case "Strawberry_Seed" -> new Strawberry();
-            case "Kiwi_Seed" -> new Kiwi();
+            case "Lemon_Seed" -> new Lemon();
             case "Corn_Seed" -> new Corn();
-            case "Pumpkin_Seed" -> new Pumpkin();
+            case "Pineapple_Seed" -> new Pineapple();
             default -> null;
         };
     }
@@ -277,6 +289,26 @@ public class MainController {
         labelStatus.setText("Tool : Harvest");
     }
 
+    public void init(Farms farms) {
+        this.farms = farms;
+
+        if (this.gameTimer != null) {
+            this.gameTimer.stop();
+        }
+        this.gameTimer = new GameTimer(this.farms, this::updateUI);
+        this.gameTimer.start();
+
+        updateUI();
+        refreshGrid();
+        refreshInventoryUI();
+    }
+
+    @FXML
+    private void onSaveClicked() {
+        SaveSystem.saves(this.farms, this.farms.getCurrentSaveSlot());
+        System.out.println("Sauvegarde effectuée sur le slot " + farms.getCurrentSaveSlot());
+    }
+
     @FXML
     private void onOpenInventory() {
         if (inventoryStage != null && inventoryStage.isShowing()) {
@@ -310,7 +342,7 @@ public class MainController {
 
     @FXML
     private void onSave() {
-        SaveSystem.saves(this.farms);
+        SaveSystem.saves(this.farms, this.farms.getCurrentSaveSlot());
         labelStatus.setText("Game Saved !");
     }
 

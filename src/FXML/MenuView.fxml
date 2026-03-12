@@ -10,9 +10,9 @@
 
     <Text text="FARM MY FARM" style="-fx-font-size: 50; -fx-fill: white; -fx-font-weight: bold;" />
 
-    <VBox alignment="CENTER" spacing="10">
+    <VBox fx:id="menuPane" alignment="CENTER" spacing="10">
         <Button text="Nouvelle Partie" onAction="#handleNewGame" prefWidth="200" styleClass="pixel-button" />
-        <Button text="Charger" onAction="#handleLoadGame" prefWidth="200" styleClass="pixel-button" />
+        <Button fx:id="loadBTN" text="Charger" onAction="#onPlayClicked" prefWidth="200" styleClass="pixel-button" />
         <Button text="Quitter" onAction="#handleQuit" prefWidth="200" styleClass="pixel-button" />
     </VBox>
 

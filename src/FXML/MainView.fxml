@@ -62,10 +62,10 @@
                 <Button fx:id="Carrot_Seed" text="🥕 Carotte" onAction="#handleselectSeed" prefWidth="100" />
                 <Button fx:id="Potato_Seed" text="🥔 Patate" onAction="#handleselectSeed" prefWidth="100" />
                 <Button fx:id="Tomato_Seed" text="🍅 Tomate" onAction="#handleselectSeed" prefWidth="100" />
-                <Button fx:id="Kiwi_Seed" text="🥝 Kiwi" onAction="#handleselectSeed" prefWidth="100" />
+                <Button fx:id="Lemon_Seed" text="🍋 Citron" onAction="#handleselectSeed" prefWidth="100" />
                 <Button fx:id="Strawberry_Seed" text="🍓 Fraise" onAction="#handleselectSeed" prefWidth="100" />
                 <Button fx:id="Corn_Seed" text="🌽 Maïs" onAction="#handleselectSeed" prefWidth="100" />
-                <Button fx:id="Pumpkin_Seed" text="🎃 Citrouille" onAction="#handleselectSeed" prefWidth="100" />
+                <Button fx:id="Pineapple_Seed" text="🍍 Ananas" onAction="#handleselectSeed" prefWidth="100" />
             </HBox>
         </VBox>
     </bottom>
