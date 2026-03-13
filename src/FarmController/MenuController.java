@@ -52,7 +52,7 @@ public class MenuController {
 
             MainController gameController = loader.getController();
 
-            Farms myFarm = new Farms(10000.0);
+            Farms myFarm = new Farms(20.0);
             myFarm.setCurrentSaveSlot(slotId);
 
             File saveFile = new File("saves/save" + slotId + ".txt");

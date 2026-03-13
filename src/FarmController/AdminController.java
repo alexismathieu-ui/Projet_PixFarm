@@ -78,7 +78,7 @@ public class AdminController {
         feedback("🗑️ Inventaire vidé.");
     }
     @FXML private void onResetGame() {
-        farms.setMoney(10000);
+        farms.setMoney(20);
         farms.setLevel(1);
         farms.setCurrentXP(0);
         farms.setNextLevelXP(100);

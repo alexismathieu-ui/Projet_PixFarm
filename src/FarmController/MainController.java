@@ -243,7 +243,7 @@ public class MainController {
         } else if (plotting.getActualCulture().isReady()) {
             String cropName = plotting.getActualCulture().getName() + "_Crop";
             farms.getInventory().add(cropName, 1);
-            farms.addXP(100);
+            farms.addXP(50);
             refreshInventoryUI();
             plotting.collect();
             labelStatus.setText("Collected : " + cropName);
