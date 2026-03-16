@@ -9,19 +9,19 @@
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Niveau 3        10 000 $        ☀️ Soleil (×1)      │
+│  Niveau 3        20 $        ☀️ Soleil (×1)        │
 ├──────────┬──────────────────────────────────────────┤
-│          │  🌱  🌿  🌾  🔒  🔒  🔒  🔒  🔒  🔒  🔒  │
-│ NAVIGATION│  🔒  🔒  🔒  🔒  🔒  🔒  🔒  🔒  🔒  🔒  │
+│          │  🌱  🌿  🌾  🔒  🔒  🔒  🔒  🔒  🔒  │
+│ NAVIGATION│  🔒  🔒  🔒  🔒  🔒  🔒  🔒  🔒     │
 │          │                                          │
-│ 🛒 Marchand│                                          │
-│ 🎒 Sac    │                                          │
-│ 📋 Quêtes │                                          │
-│ 🏠 Grange │                                          │
-│          │                                          │
-│ 💾 Save   │                                          │
+│ 🛒 Marchand│                                        │
+│ 🎒 Sac    │                                         │
+│ 📋 Quêtes │                                         │
+│ 🏠 Grange │                                         │
+│          │                                           │
+│ 💾 Save   │                                         │
 └──────────┴──────────────────────────────────────────┘
-│  🌾 Blé   🥕 Carotte  🥔 Patate  🍅 Tomate  ...      │
+│  🌾 Blé   🥕 Carotte  🥔 Patate  🍅 Tomate  ...   │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -231,5 +231,5 @@ Timeline (30 s)   → updateMarketFluctuation() + update UI
 
 ## 👤 Auteur
 
-Projet réalisé par **AlexisM**  
+Projet réalisé par **Alexis Mathieu**  
 *Pix'Farm — Farm My Farm*
