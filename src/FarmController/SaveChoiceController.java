@@ -2,7 +2,9 @@ package FarmController;
 
 import FarmEngine.SaveSystem;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import java.util.function.Consumer;
 
@@ -28,9 +30,30 @@ public class SaveChoiceController {
     @FXML private void deleteSlot3() { handleDelete(3); }
 
     private void handleDelete(int slot) {
+        Alert confirmation = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                "Supprimer définitivement la sauvegarde du slot " + slot + " ?",
+                ButtonType.YES,
+                ButtonType.NO
+        );
+        confirmation.setTitle("Confirmation de suppression");
+        confirmation.setHeaderText("Suppression de sauvegarde");
+
+        if (confirmation.showAndWait().orElse(ButtonType.NO) != ButtonType.YES) {
+            return;
+        }
+
         java.io.File file = new java.io.File("saves/save" + slot + ".txt");
+        java.io.File backup = new java.io.File("saves/save" + slot + ".txt.bak");
+        java.io.File temp = new java.io.File("saves/save" + slot + ".txt.tmp");
         if (file.exists()) {
             file.delete();
+        }
+        if (backup.exists()) {
+            backup.delete();
+        }
+        if (temp.exists()) {
+            temp.delete();
         }
 
         slot1Btn.setText("🌾  SLOT 1  —  " + FarmEngine.SaveSystem.getSaveSummary(1));

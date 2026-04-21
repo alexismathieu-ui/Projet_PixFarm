@@ -6,7 +6,10 @@ import Farm.Farms;
 import Farm.Plot;
 import Farm.Quest;
 import FarmEngine.GameTimer;
+import FarmEngine.GameBalance;
 import FarmEngine.SaveSystem;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +31,7 @@ import javafx.scene.input.KeyCombination;
 
 import java.io.IOException;
 import java.util.Random;
+import javafx.util.Duration;
 
 public class MainController {
     @FXML private GridPane farmGrid;
@@ -46,7 +50,8 @@ public class MainController {
     private String selectedSeed = "Wheat_Seed";
     private InventoryController currentInventoryCtrl;
     private Stage inventoryStage;
-    int requiredLevel;
+    private final int requiredLevel = GameBalance.BARN_UNLOCK_LEVEL;
+    private Timeline autosaveTimer;
 
     @FXML
     public void initialize() {
@@ -81,8 +86,6 @@ public class MainController {
             case DROUGHT -> "🔥Sécheresse (x0.5)";
         };
         weatherLabel.setText("Météo : " + weatherText);
-
-        refreshGrid();
     }
 
     private Image textureSol  = null;
@@ -329,8 +332,27 @@ public class MainController {
 
     @FXML
     private void onActionHarvest() {
-        selectedActions = "HARVEST";
-        labelStatus.setText("Tool : Harvest");
+        int collected = 0;
+        for (int i = 0; i < farms.getNbLINES(); i++) {
+            for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
+                Plot plot = farms.getField()[i][j];
+                if (!plot.isEmpty() && plot.getActualCulture().isReady()) {
+                    String cropName = plot.getActualCulture().getName() + "_Crop";
+                    farms.getInventory().add(cropName, 1);
+                    farms.addXP(50);
+                    plot.collect();
+                    collected++;
+                }
+            }
+        }
+
+        refreshInventoryUI();
+        refreshGrid();
+        if (collected > 0) {
+            labelStatus.setText("Récolte terminée : " + collected + " culture(s) collectée(s).");
+        } else {
+            labelStatus.setText("Aucune culture prête à récolter.");
+        }
     }
 
     public void init(Farms farms) {
@@ -341,6 +363,7 @@ public class MainController {
         }
         this.gameTimer = new GameTimer(this.farms, this::updateUI);
         this.gameTimer.start();
+        startAutosave();
 
         javafx.application.Platform.runLater(() -> {
             if (farmGrid.getScene() != null) {
@@ -375,11 +398,14 @@ public class MainController {
             currentInventoryCtrl = loader.getController();
             currentInventoryCtrl.update(this.farms);
 
-            Stage inventoryStage = new Stage();
+            inventoryStage = new Stage();
             inventoryStage.setTitle("Inventory");
             inventoryStage.setScene(new Scene(root));
 
-            inventoryStage.setOnCloseRequest(e -> currentInventoryCtrl = null);
+            inventoryStage.setOnCloseRequest(e -> {
+                currentInventoryCtrl = null;
+                inventoryStage = null;
+            });
 
             inventoryStage.show();
         } catch (IOException e){
@@ -411,6 +437,7 @@ public class MainController {
         }
         this.gameTimer = new GameTimer(this.farms, this::updateUI);
         this.gameTimer.start();
+        startAutosave();
 
         refreshGrid();
         updateUI();
@@ -448,6 +475,22 @@ public class MainController {
 
         Stage stage = (Stage) farmGrid.getScene().getWindow();
         stage.getScene().setRoot(root);
+    }
+
+    private void startAutosave() {
+        if (autosaveTimer != null) {
+            autosaveTimer.stop();
+        }
+        if (!GameBalance.AUTOSAVE_ENABLED) {
+            return;
+        }
+        autosaveTimer = new Timeline(new KeyFrame(Duration.seconds(GameBalance.AUTOSAVE_INTERVAL_SECONDS), event -> {
+            if (this.farms != null) {
+                SaveSystem.saves(this.farms, this.farms.getCurrentSaveSlot());
+            }
+        }));
+        autosaveTimer.setCycleCount(Timeline.INDEFINITE);
+        autosaveTimer.play();
     }
 
 }

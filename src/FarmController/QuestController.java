@@ -30,6 +30,10 @@ public class QuestController {
             case "strawberry" -> "FraiseIC.png";
             case "corn"       -> "MaisIC.png";
             case "pineapple"  -> "ananasIC.png";
+            case "egg"        -> "EggIC.png";
+            case "wool"       -> "WoolIC.png";
+            case "milk"       -> "MilkIC.png";
+            case "truff"      -> "TruffIC.png";
             default           -> null;
         };
         if (filename == null) return null;
@@ -50,6 +54,10 @@ public class QuestController {
             case "Strawberry" -> "Fraise";
             case "Corn"       -> "Maïs";
             case "Pineapple"  -> "Ananas";
+            case "Egg"        -> "Oeuf";
+            case "Wool"       -> "Laine";
+            case "Milk"       -> "Lait";
+            case "Truff"      -> "Truffe";
             default           -> itemName.replace("_Crop", "");
         };
     }

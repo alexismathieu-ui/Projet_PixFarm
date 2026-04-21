@@ -33,6 +33,7 @@
 
         <VBox fx:id="menuPane" alignment="CENTER" spacing="20" styleClass="menu-panel">
             <Button text="🌱  Commencer Partie" onAction="#onPlayClicked" styleClass="menu-btn" />
+            <Button text="▶  Continuer" onAction="#onContinueClicked" styleClass="menu-btn" />
             <Button text="✖   Quitter"          onAction="#handleQuit"     styleClass="menu-btn-quit" />
         </VBox>
 

@@ -11,7 +11,16 @@ public class Inventory {
     }
 
     public void add(String name, int quantity){
-        ressources.put(name, ressources.getOrDefault(name, 0) + quantity);
+        int current = ressources.getOrDefault(name, 0);
+        int updated = current + quantity;
+        if (updated < 0) {
+            return;
+        }
+        if (updated == 0) {
+            ressources.remove(name);
+            return;
+        }
+        ressources.put(name, updated);
     }
 
     public int getQuantity(String name){

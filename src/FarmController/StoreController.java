@@ -3,6 +3,7 @@ package FarmController;
 import Farm.Crops.*;
 import Farm.Culture;
 import Farm.Farms;
+import FarmEngine.GameBalance;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -40,21 +41,11 @@ public class StoreController {
     }
 
     private double getSellPrice(String name) {
-        return switch (name) {
-            case "Egg_Crop" -> 500.0;
-            case "Wool_Crop" -> 3000.0;
-            case "Milk_Crop" -> 20000.0;
-            case "Truff_Crop" -> 150000.0;
-            case "Wheat_Crop" -> 15.0;
-            case "Carrot_Crop" -> 400.0;
-            case "Potato_Crop" -> 2100.0;
-            case "Tomato_Crop" -> 6500.0;
-            case "Lemon_Crop" -> 24000.0;
-            case "Strawberry_Crop" -> 150000.0;
-            case "Corn_Crop" -> 575000.0;
-            case "Pineapple_Crop" -> 3000000.0;
-            default -> 0.0;
-        };
+        return GameBalance.getSellBasePrice(name);
+    }
+
+    private String normalizeMarketItemName(String itemName) {
+        return itemName.replace("_Crop", "").replace("_Seed", "");
     }
 
     @FXML
@@ -63,14 +54,14 @@ public class StoreController {
 
         moneyLabel.setText("Argent : " + (int)farms.getMoney() + " $");
 
-        updateButtonState(Wheat_Seed, 1);
-        updateButtonState(Carrot_Seed, 2);
-        updateButtonState(Potato_Seed, 3);
-        updateButtonState(Tomato_Seed, 5);
-        updateButtonState(Lemon_Seed, 6);
-        updateButtonState(Strawberry_Seed, 7);
-        updateButtonState(Corn_Seed, 10);
-        updateButtonState(Pineapple_Seed, 15);
+        updateButtonState(Wheat_Seed, GameBalance.getSeedUnlockLevel("Wheat_Seed"));
+        updateButtonState(Carrot_Seed, GameBalance.getSeedUnlockLevel("Carrot_Seed"));
+        updateButtonState(Potato_Seed, GameBalance.getSeedUnlockLevel("Potato_Seed"));
+        updateButtonState(Tomato_Seed, GameBalance.getSeedUnlockLevel("Tomato_Seed"));
+        updateButtonState(Lemon_Seed, GameBalance.getSeedUnlockLevel("Lemon_Seed"));
+        updateButtonState(Strawberry_Seed, GameBalance.getSeedUnlockLevel("Strawberry_Seed"));
+        updateButtonState(Corn_Seed, GameBalance.getSeedUnlockLevel("Corn_Seed"));
+        updateButtonState(Pineapple_Seed, GameBalance.getSeedUnlockLevel("Pineapple_Seed"));
 
         updatePriceLabel(wheatSellLabel, new Wheat());
         updatePriceLabel(carrotSellLabel, new Carrot());
@@ -97,7 +88,7 @@ public class StoreController {
     private void updatePriceLabel(Label label, Culture c) {
         if (label == null) return;
 
-        double dynamicPrice = farms.getDemandPrice(c.getName(), c.getSellPrice());
+        double dynamicPrice = farms.getDemandPrice(normalizeMarketItemName(c.getName()), c.getSellPrice());
         label.setText("Prix de vente actuel : " + (int)dynamicPrice + " $");
 
 
@@ -131,14 +122,9 @@ public class StoreController {
             if (qty <= 0) continue;
 
             double basePrice = 0;
-            String displayName = itemName;
-
-            if (itemName.endsWith("_Crop")) {
-                basePrice = getSellPrice(itemName);
-                displayName = itemName.replace("_Crop", "");
-            } else {
-                basePrice = getSellPrice(itemName);
-            }
+            String displayName = normalizeMarketItemName(itemName);
+            String sellKey = itemName.endsWith("_Crop") ? itemName : displayName + "_Crop";
+            basePrice = getSellPrice(sellKey);
 
             if (basePrice > 0) {
                 double pricePerUnit = farms.getDemandPrice(displayName, basePrice);
@@ -155,17 +141,7 @@ public class StoreController {
     }
 
     private double getPriceforSeeds(String type) {
-        return switch (type) {
-            case "Wheat_Seed" -> 5.0;
-            case "Carrot_Seed" -> 180.0;
-            case "Potato_Seed" -> 850.0;
-            case "Tomato_Seed" -> 3500.0;
-            case "Lemon_Seed" -> 15000.0;
-            case "Strawberry_Seed" -> 60000.0;
-            case "Corn_Seed" -> 250000.0;
-            case "Pineapple_Seed" -> 950000.0;
-            default -> 0.0;
-        };
+        return GameBalance.getSeedPrice(type);
     }
 
     private Culture createCulture(String seedType) {

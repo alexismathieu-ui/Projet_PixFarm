@@ -3,6 +3,7 @@ package FarmController;
 import Farm.Animal.*;
 import Farm.Animals;
 import Farm.Farms;
+import FarmEngine.GameBalance;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,6 +15,7 @@ public class AnimalShopController {
     @FXML private Label moneyLabel;
     @FXML private Label feedbackLabel;
 
+    @FXML private Button Chicken_Btn;
     @FXML private Button Sheep_Btn;
     @FXML private Button Cow_Btn;
     @FXML private Button Pig_Btn;
@@ -27,12 +29,14 @@ public class AnimalShopController {
         this.onUpdateCallback = callback;
     }
 
-    private void updateButtonState(Button btn, int requiredLevel) {
+    private void updateButtonState(Button btn, int requiredLevel, String label, double price) {
         if (btn != null) {
             boolean isLocked = farms.getLevel() < requiredLevel;
             btn.setDisable(isLocked);
             if (isLocked) {
                 btn.setText("🔒 Niv. " + requiredLevel);
+            } else {
+                btn.setText(label + " — " + (int) price + " $");
             }
         }
     }
@@ -40,9 +44,10 @@ public class AnimalShopController {
     private void updateUI() {
         moneyLabel.setText("Argent : " + (int)farms.getMoney() + " $");
 
-        updateButtonState(Cow_Btn, 12);
-        updateButtonState(Sheep_Btn, 9);
-        updateButtonState(Pig_Btn, 15);
+        updateButtonState(Chicken_Btn, GameBalance.getAnimalUnlockLevel("Chicken"), "🐔  Poulet", new Chicken().getBuyPrice());
+        updateButtonState(Sheep_Btn, GameBalance.getAnimalUnlockLevel("Sheep"), "🐑  Mouton", new Sheep().getBuyPrice());
+        updateButtonState(Cow_Btn, GameBalance.getAnimalUnlockLevel("Cow"), "🐄  Vache", new Cow().getBuyPrice());
+        updateButtonState(Pig_Btn, GameBalance.getAnimalUnlockLevel("Pig"), "🐷  Cochon", new Pig().getBuyPrice());
     }
 
     private void setFeedback(String msg) {
@@ -59,13 +64,7 @@ public class AnimalShopController {
     private void buyPig() { buyAnimal(new Pig()); }
 
     private void buyAnimal(Animals a) {
-        int requiredLevel = switch (a.getSpecies()) {
-            case "Chicken" -> 5;
-            case "Sheep" -> 9;
-            case "Cow" -> 12;
-            case "Pig" -> 15;
-            default -> 1;
-        };
+        int requiredLevel = GameBalance.getAnimalUnlockLevel(a.getSpecies());
 
         if (farms.getLevel() < requiredLevel) {
             setFeedback("🔒 Niveau " + requiredLevel + " requis !");

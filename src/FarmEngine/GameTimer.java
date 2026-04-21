@@ -13,6 +13,7 @@ public class GameTimer {
     private Runnable updateUI;
     private Timeline oneminrefr;
     private Timeline marketTimer;
+    private Timeline playTimeTimer;
 
     public GameTimer(Farms farms, Runnable updateUI){
         this.farms = farms;
@@ -35,6 +36,9 @@ public class GameTimer {
             updateUI.run();
         }));
         this.marketTimer.setCycleCount(Timeline.INDEFINITE);
+
+        this.playTimeTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> farms.addPlayTimeSeconds(1)));
+        this.playTimeTimer.setCycleCount(Timeline.INDEFINITE);
 
     }
 
@@ -63,10 +67,12 @@ public class GameTimer {
         timeline.play();
         oneminrefr.play();
         marketTimer.play();
+        playTimeTimer.play();
     }
     public void stop() {
         timeline.stop();
         oneminrefr.stop();
         marketTimer.stop();
+        playTimeTimer.stop();
     }
 }

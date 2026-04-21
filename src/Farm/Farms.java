@@ -26,6 +26,7 @@ public class Farms {
     private List<Quest> currentQuests = new ArrayList<>();
     private long questResetTime = 0;
     private int currentSaveSlot = 1;
+    private long playTimeSeconds = 0;
 
 
 
@@ -85,16 +86,42 @@ public class Farms {
 
     public void addXP(double amount) {
         this.currentXP += amount;
-        if (this.currentXP >= nextLevelXP) {
+        while (this.currentXP >= nextLevelXP) {
             levelUp();
         }
     }
 
     private void levelUp() {
         this.level++;
-        this.currentXP = 0;
+        this.currentXP -= this.nextLevelXP;
         this.nextLevelXP *= 1.5;
         System.out.println("LEVEL UP ! Vous êtes niveau " + level);
+    }
+
+    public void resetBeforeLoad() {
+        this.money = 0;
+        this.level = 1;
+        this.currentXP = 0;
+        this.nextLevelXP = 100;
+        this.unlockedPlotsCount = 0;
+        this.inventory.empty();
+        this.myAnimals.clear();
+        this.activeQuests.clear();
+        this.currentQuests.clear();
+        this.nextQuestTime = 0;
+        this.questResetTime = 0;
+        this.playTimeSeconds = 0;
+        this.marketSales.clear();
+        this.enclosureManager = null;
+
+        for (int i = 0; i < LINES; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                field[i][j] = new Plot();
+                if (i == 0 && j == 0) {
+                    field[i][j].setLocked(false);
+                }
+            }
+        }
     }
 
     public void updateWeather() {
@@ -144,6 +171,9 @@ public class Farms {
     public void setQuestResetTime(long time) { this.questResetTime = time; }
     public int getCurrentSaveSlot() { return currentSaveSlot; }
     public void setCurrentSaveSlot(int slot) { this.currentSaveSlot = slot; }
+    public long getPlayTimeSeconds() { return playTimeSeconds; }
+    public void setPlayTimeSeconds(long playTimeSeconds) { this.playTimeSeconds = Math.max(0, playTimeSeconds); }
+    public void addPlayTimeSeconds(long delta) { this.playTimeSeconds = Math.max(0, this.playTimeSeconds + Math.max(0, delta)); }
 
     // ---- Enclosure Manager ----
     private EnclosureManager enclosureManager;
