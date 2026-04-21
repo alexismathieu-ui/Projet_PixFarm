@@ -5,6 +5,7 @@ import Farm.Animals;
 import Farm.Enclosure.Enclosure;
 import Farm.Enclosure.EnclosureManager;
 import Farm.Farms;
+import FarmEngine.I18n;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -100,8 +101,10 @@ public class EnclosureController {
 
         Label foodLabel = new Label("🌾 " + a.getFoodNeeded().replace("_", " "));
         foodLabel.setStyle("-fx-text-fill: #a89070; -fx-font-size: 10px; -fx-font-family: 'Courier New', monospace;");
+        Label statsLabel = new Label(I18n.tr("enclosure.animal.stats", (int) a.getHealth(), (int) a.getHappiness()));
+        statsLabel.setStyle("-fx-text-fill: #8fd3a7; -fx-font-size: 10px; -fx-font-family: 'Courier New', monospace;");
 
-        card.getChildren().addAll(emojiLabel, nameLabel, statusLbl, foodLabel);
+        card.getChildren().addAll(emojiLabel, nameLabel, statusLbl, statsLabel, foodLabel);
 
         // Click interaction
         card.setOnMouseClicked(e -> handleAnimalClick(a));
@@ -113,21 +116,20 @@ public class EnclosureController {
         if (a.hasProduced()) {
             farms.getInventory().add(a.getProductType() + "_Crop", 1);
             farms.addXP(50);
-            a.setProduced(false);
-            a.setHungry(true);
-            updateStatus("✅ Récolté : " + a.getProductType() + " !");
+            a.collectProduct();
+            updateStatus(I18n.tr("enclosure.status.collected", a.getProductType()));
         } else if (a.isHungry()) {
             String food = a.getFoodNeeded();
             if (farms.getInventory().getQuantity(food) > 0) {
                 farms.getInventory().add(food, -1);
                 farms.addXP(25);
-                a.setHungry(false);
-                updateStatus("🍽️ " + a.getSpecies() + " nourri !");
+                a.feed();
+                updateStatus(I18n.tr("enclosure.status.fed", a.getSpecies()));
             } else {
-                updateStatus("❌ Tu n'as pas de " + food.replace("_", " ") + " !");
+                updateStatus(I18n.tr("enclosure.status.noFood", food.replace("_", " ")));
             }
         } else {
-            updateStatus("⚙️ " + a.getSpecies() + " est en train de travailler...");
+            updateStatus(I18n.tr("enclosure.status.working", a.getSpecies()));
         }
         refreshAnimalGrid();
     }
@@ -136,16 +138,16 @@ public class EnclosureController {
     private void onAddAnimalToEnclosure() {
         int idx = animalComboBox.getSelectionModel().getSelectedIndex();
         if (idx < 0 || idx >= unassignedAnimals.size()) {
-            updateStatus("❌ Sélectionne un animal dans la liste !");
+            updateStatus(I18n.tr("enclosure.status.selectAnimal"));
             return;
         }
         if (enclosure.isFull()) {
-            updateStatus("❌ Enclos plein ! Capacité max : " + enclosure.getMaxCapacity());
+            updateStatus(I18n.tr("enclosure.status.full", enclosure.getMaxCapacity()));
             return;
         }
         Animals a = unassignedAnimals.get(idx);
         enclosure.addAnimal(a);
-        updateStatus("✅ " + a.getSpecies() + " ajouté dans l'enclos !");
+        updateStatus(I18n.tr("enclosure.status.added", a.getSpecies()));
         refreshUnassigned();
         refreshAll();
     }
@@ -159,12 +161,12 @@ public class EnclosureController {
                 if (farms.getInventory().getQuantity(food) > 0) {
                     farms.getInventory().add(food, -1);
                     farms.addXP(25);
-                    a.setHungry(false);
+                a.feed();
                     fed++;
                 }
             }
         }
-        updateStatus(fed > 0 ? "🍽️ " + fed + " animal(aux) nourri(s) !" : "❌ Pas assez de nourriture !");
+        updateStatus(fed > 0 ? I18n.tr("enclosure.status.feedAll.done", fed) : I18n.tr("enclosure.status.feedAll.noFood"));
         refreshAnimalGrid();
     }
 
@@ -175,23 +177,22 @@ public class EnclosureController {
             if (a.hasProduced()) {
                 farms.getInventory().add(a.getProductType() + "_Crop", 1);
                 farms.addXP(50);
-                a.setProduced(false);
-                a.setHungry(true);
+                a.collectProduct();
                 harvested++;
             }
         }
-        updateStatus(harvested > 0 ? "✅ " + harvested + " produit(s) récolté(s) !" : "Rien à récolter.");
+        updateStatus(harvested > 0 ? I18n.tr("enclosure.status.harvestAll.done", harvested) : I18n.tr("enclosure.status.harvestAll.none"));
         refreshAnimalGrid();
     }
 
     @FXML
     private void onDeleteEnclosure() {
         if (!enclosure.isEmpty()) {
-            updateStatus("❌ Retire tous les animaux avant de supprimer l'enclos !");
+            updateStatus(I18n.tr("enclosure.status.delete.notEmpty"));
             return;
         }
         enclosureManager.removeEnclosure(enclosure.getId());
-        updateStatus("🗑️ Enclos supprimé.");
+        updateStatus(I18n.tr("enclosure.status.delete.done"));
         onClose();
     }
 
@@ -221,8 +222,8 @@ public class EnclosureController {
     }
 
     private String getAnimalStatusText(Animals a) {
-        if (a.hasProduced()) return "✅ Cliquer pour récolter";
-        if (a.isHungry())    return "🍽️ Cliquer pour nourrir";
-        return "⚙️ En production...";
+        if (a.hasProduced()) return I18n.tr("enclosure.animal.ready");
+        if (a.isHungry())    return I18n.tr("enclosure.animal.hungry");
+        return I18n.tr("enclosure.animal.working");
     }
 }

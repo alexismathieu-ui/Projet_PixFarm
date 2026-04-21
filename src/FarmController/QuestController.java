@@ -1,6 +1,9 @@
 package FarmController;
 
 import Farm.*;
+import FarmEngine.AudioPaths;
+import FarmEngine.I18n;
+import FarmEngine.SoundManager;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -14,6 +17,9 @@ public class QuestController {
 
     @FXML private VBox  questContainer;
     @FXML private Label timerLabel;
+    @FXML private Label headerTitleLabel;
+    @FXML private Label headerSubtitleLabel;
+    @FXML private Button closeBtn;
 
     private Farms    farms;
     private Runnable onUpdate;
@@ -45,21 +51,10 @@ public class QuestController {
     }
 
     private String cropDisplayName(String itemName) {
-        return switch (itemName.replace("_Crop", "").replace("_Seed", "")) {
-            case "Wheat"      -> "Blé";
-            case "Carrot"     -> "Carotte";
-            case "Potato"     -> "Patate";
-            case "Tomato"     -> "Tomate";
-            case "Lemon"      -> "Citron";
-            case "Strawberry" -> "Fraise";
-            case "Corn"       -> "Maïs";
-            case "Pineapple"  -> "Ananas";
-            case "Egg"        -> "Oeuf";
-            case "Wool"       -> "Laine";
-            case "Milk"       -> "Lait";
-            case "Truff"      -> "Truffe";
-            default           -> itemName.replace("_Crop", "");
-        };
+        String base = itemName.replace("_Crop", "").replace("_Seed", "");
+        String key = "quest.item." + base;
+        String tr = I18n.tr(key);
+        return tr.equals(key) ? base : tr;
     }
 
     private void refreshUI() {
@@ -67,7 +62,7 @@ public class QuestController {
         long now = System.currentTimeMillis();
 
         if (now < farms.getNextQuestTime()) {
-            Label w = new Label("⏳  Nouvelles quêtes bientôt disponibles...");
+            Label w = new Label(I18n.tr("quest.waiting"));
             w.getStyleClass().add("quest-empty-label");
             questContainer.getChildren().add(w);
             return;
@@ -76,7 +71,7 @@ public class QuestController {
         if (farms.getActiveQuests().isEmpty()) farms.generalQuests();
 
         if (farms.getActiveQuests().isEmpty()) {
-            Label e = new Label("Aucune quête active.");
+            Label e = new Label(I18n.tr("quest.none"));
             e.getStyleClass().add("quest-empty-label");
             questContainer.getChildren().add(e);
             return;
@@ -98,10 +93,10 @@ public class QuestController {
         HBox cardHeader = new HBox(8);
         cardHeader.getStyleClass().add("quest-card-header");
         cardHeader.setAlignment(Pos.CENTER_LEFT);
-        Label questTag = new Label("📜  COMMANDE");
+        Label questTag = new Label("📜  " + I18n.tr("quest.order"));
         questTag.getStyleClass().add("quest-card-title");
         Region spacer = new Region(); HBox.setHgrow(spacer, Priority.ALWAYS);
-        Label stockBadge = new Label("En stock : " + inStock);
+        Label stockBadge = new Label(I18n.tr("quest.stock", inStock));
         stockBadge.setStyle(
                 "-fx-font-family:'Courier New'; -fx-font-size:11px; -fx-font-weight:bold; " +
                         (canDeliver ? "-fx-text-fill:#88ff66;" : "-fx-text-fill:#ff8888;")
@@ -120,7 +115,7 @@ public class QuestController {
 
         VBox nameBox = new VBox(2);
         Label nameLabel = new Label(displayName); nameLabel.getStyleClass().add("quest-item-name");
-        Label amtLabel  = new Label("× " + q.getAmountNeeded() + " demandés"); amtLabel.getStyleClass().add("quest-amount");
+        Label amtLabel  = new Label("× " + q.getAmountNeeded() + " " + I18n.tr("quest.requested")); amtLabel.getStyleClass().add("quest-amount");
         nameBox.getChildren().addAll(nameLabel, amtLabel);
         itemRow.getChildren().add(nameBox);
         body.getChildren().add(itemRow);
@@ -132,7 +127,7 @@ public class QuestController {
         HBox rewardRow = new HBox(16);
         rewardRow.getStyleClass().add("quest-rewards-box");
         rewardRow.setAlignment(Pos.CENTER_LEFT);
-        Label rewardTitle = new Label("Récompenses : ");
+        Label rewardTitle = new Label(I18n.tr("quest.rewards"));
         rewardTitle.setStyle("-fx-font-family:'Courier New'; -fx-font-size:11px; -fx-text-fill:#8b6914; -fx-font-weight:bold;");
         Label money = new Label("💰 " + (int) q.getRewardMoney() + " $"); money.getStyleClass().add("reward-money");
         Label xp    = new Label("⭐ " + q.getRewardXP() + " XP");          xp.getStyleClass().add("reward-xp");
@@ -142,8 +137,8 @@ public class QuestController {
         // Boutons
         HBox btnRow = new HBox(8);
         btnRow.setAlignment(Pos.CENTER_RIGHT);
-        Button btnRefuse  = new Button("✖  Refuser");  btnRefuse.getStyleClass().add("btn-refuse");
-        Button btnDeliver = new Button("✔  Livrer");   btnDeliver.getStyleClass().add("btn-deliver");
+        Button btnRefuse  = new Button("✖  " + I18n.tr("quest.refuse"));  btnRefuse.getStyleClass().add("btn-refuse");
+        Button btnDeliver = new Button("✔  " + I18n.tr("quest.deliver"));   btnDeliver.getStyleClass().add("btn-deliver");
         if (!canDeliver) { btnDeliver.setDisable(true); btnDeliver.setOpacity(0.45); }
         btnRefuse.setOnAction(e  -> removeQuest(q));
         btnDeliver.setOnAction(e -> deliverQuest(q));
@@ -156,7 +151,12 @@ public class QuestController {
 
     private void deliverQuest(Quest q) {
         if (farms.getInventory().getQuantity(q.getTargetItem()) >= q.getAmountNeeded()) {
+            SoundManager.playSfx(AudioPaths.SFX_SELL);
             farms.getInventory().add(q.getTargetItem(), -q.getAmountNeeded());
+            if (q.getTargetItem().endsWith("_Crop")) {
+                String base = q.getTargetItem().replace("_Crop", "");
+                farms.consumeQualityBonus(base, q.getAmountNeeded());
+            }
             farms.winMoney(q.getRewardMoney());
             farms.addXP(q.getRewardXP());
             removeQuest(q);
@@ -164,6 +164,7 @@ public class QuestController {
     }
 
     private void removeQuest(Quest q) {
+        SoundManager.playSfx(AudioPaths.SFX_CLICK);
         farms.getActiveQuests().remove(q);
         if (farms.getActiveQuests().isEmpty())
             farms.setNextQuestTime(System.currentTimeMillis() + (5 * 60 * 1000));
@@ -174,16 +175,17 @@ public class QuestController {
     public void init(Farms farms, Runnable onUpdate) {
         this.farms    = farms;
         this.onUpdate = onUpdate;
+        applyStaticTexts();
 
         liveTimer = new Timeline(new javafx.animation.KeyFrame(javafx.util.Duration.seconds(1), e -> {
             long now  = System.currentTimeMillis();
             long next = farms.getNextQuestTime();
             if (now < next) {
                 long diff = (next - now) / 1000;
-                timerLabel.setText(String.format("Nouvelles quêtes dans : %d:%02d", diff / 60, diff % 60));
+                timerLabel.setText(I18n.tr("quest.available.in", diff / 60, diff % 60));
                 timerLabel.getStyleClass().setAll("timer-label");
             } else {
-                timerLabel.setText("✔  Quêtes disponibles !");
+                timerLabel.setText("✔  " + I18n.tr("quest.available.now"));
                 timerLabel.getStyleClass().setAll("timer-label-ok");
                 if (farms.getActiveQuests().isEmpty()) refreshUI();
             }
@@ -191,6 +193,13 @@ public class QuestController {
         liveTimer.setCycleCount(Timeline.INDEFINITE);
         liveTimer.play();
         refreshUI();
+    }
+
+    private void applyStaticTexts() {
+        if (headerTitleLabel != null) headerTitleLabel.setText(I18n.tr("quest.header.title"));
+        if (headerSubtitleLabel != null) headerSubtitleLabel.setText(I18n.tr("quest.header.subtitle"));
+        if (closeBtn != null) closeBtn.setText("✖  " + I18n.tr("quest.close"));
+        if (timerLabel != null) timerLabel.setText(I18n.tr("quest.loading"));
     }
 
     @FXML

@@ -32,10 +32,10 @@
         </ImageView>
 
         <VBox fx:id="menuPane" alignment="CENTER" spacing="20" styleClass="menu-panel">
-            <Button text="🌱  Commencer Partie" onAction="#onPlayClicked" styleClass="menu-btn" />
-            <Button text="▶  Continuer" onAction="#onContinueClicked" styleClass="menu-btn" />
+            <Button fx:id="playBtn" text="🌱  Commencer Partie" onAction="#onPlayClicked" styleClass="menu-btn" />
+            <Button fx:id="continueBtn" text="▶  Continuer" onAction="#onContinueClicked" styleClass="menu-btn" />
             <Label fx:id="lastSaveLabel" text="Derniere partie : aucune" style="-fx-text-fill:#ffe1a0; -fx-font-family:'Courier New'; -fx-font-size:12px;"/>
-            <Button text="✖   Quitter"          onAction="#handleQuit"     styleClass="menu-btn-quit" />
+            <Button fx:id="quitBtn" text="✖   Quitter"          onAction="#handleQuit"     styleClass="menu-btn-quit" />
         </VBox>
 
     </VBox>

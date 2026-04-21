@@ -4,6 +4,6 @@ import Farm.Culture;
 
 public class Pineapple extends Culture {
     public Pineapple(){
-        super("Pineapple", 30, 950000.0, 3000000, "images/crops/Pineapple.png");
+        super("Pineapple", 22, 110000.0, 240000.0, "images/crops/Pineapple.png");
     }
 }

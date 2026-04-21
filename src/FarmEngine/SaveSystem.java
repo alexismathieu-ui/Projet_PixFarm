@@ -8,6 +8,7 @@ import Farm.Animal.Sheep;
 import Farm.Crops.*;
 import Farm.Enclosure.Enclosure;
 import Farm.Enclosure.EnclosureManager;
+import FarmController.StoreController;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -22,11 +23,11 @@ import java.util.List;
 import java.util.zip.CRC32;
 
 public class SaveSystem {
-    private static final int SAVE_VERSION = 3;
+    private static final int SAVE_VERSION = 10;
     private static final String VERSION_PREFIX = "SAVE_VERSION=";
     private static final String CHECKSUM_PREFIX = "CHECKSUM=";
     private static final Path SAVE_DIR = Path.of("saves");
-    private static final String[] ITEM_TYPES = {"Wheat","Tomato","Carrot","Potato","Lemon","Strawberry","Corn","Pineapple","Egg","Truff","Milk","Wool"};
+    private static final String[] ITEM_TYPES = {"Wheat","Tomato","Carrot","Potato","Lemon","Strawberry","Corn","Pineapple","Egg","Truff","Milk","Wool","Compost"};
     private static final DateTimeFormatter SAVE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
             .withZone(ZoneId.systemDefault());
 
@@ -79,10 +80,25 @@ public class SaveSystem {
                     }
                 }
             }
+            lines.add("PLOT_FERTILITY_START");
+            for (int i = 0; i < farms.getNbLINES(); i++) {
+                for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
+                    lines.add(String.valueOf(farms.getField()[i][j].getFertility()));
+                }
+            }
+            lines.add("PLOT_FERTILITY_END");
+            lines.add("PLOT_ROTATION_START");
+            for (int i = 0; i < farms.getNbLINES(); i++) {
+                for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
+                    Plot p = farms.getField()[i][j];
+                    lines.add(p.getLastCropName() + "|" + p.getMonoStreak());
+                }
+            }
+            lines.add("PLOT_ROTATION_END");
 
             lines.add("ANIMALS_STARTS");
             for (Animals a : farms.getMyAnimals()) {
-                lines.add(a.getSpecies() + "|" + a.isHungry() + "|" + a.hasProduced());
+                lines.add(a.getSpecies() + "|" + a.isHungry() + "|" + a.hasProduced() + "|" + a.getHealth() + "|" + a.getHappiness());
             }
             lines.add("ANIMALS_END");
 
@@ -109,6 +125,49 @@ public class SaveSystem {
                 lines.add(q.getTargetItem() + "|" + q.getAmountNeeded() + "|" + q.getRewardMoney() + "|" + q.getRewardXP());
             }
 
+            lines.add("META_QUALITY_START");
+            java.util.Map<String, Double> qualityPool = farms.getCropQualityBonusPool();
+            java.util.Map<String, Integer> qualityUnits = farms.getCropQualityUnits();
+            lines.add(String.valueOf(qualityPool.size()));
+            for (java.util.Map.Entry<String, Double> e : qualityPool.entrySet()) {
+                int units = qualityUnits.getOrDefault(e.getKey(), 0);
+                lines.add(e.getKey() + "|" + e.getValue() + "|" + units);
+            }
+            lines.add("META_QUALITY_END");
+
+            lines.add("META_SPECIAL_ORDER");
+            lines.add(farms.getSpecialOrderItem() + "|" + farms.getSpecialOrderMultiplier() + "|" + farms.getSpecialOrderExpiryMs() + "|" + farms.getSpecialOrderDay());
+
+            lines.add("META_STORE_STOCK_START");
+            java.util.Map<String, Integer> stock = StoreController.snapshotSeedStocks();
+            lines.add(String.valueOf(stock.size()));
+            for (java.util.Map.Entry<String, Integer> e : stock.entrySet()) {
+                lines.add(e.getKey() + "|" + e.getValue());
+            }
+            lines.add(String.valueOf(StoreController.getNextRestockMs()));
+            lines.add("META_STORE_STOCK_END");
+
+            lines.add("META_SEASON");
+            lines.add(farms.getCurrentSeason().name() + "|" + farms.getNextSeasonChangeMs() + "|" + farms.getGameDay());
+
+            lines.add("META_TOOLS_START");
+            lines.add(String.valueOf(farms.getToolDurabilityMap().size()));
+            for (java.util.Map.Entry<String, Integer> e : farms.getToolDurabilityMap().entrySet()) {
+                int max = farms.getToolMaxDurabilityMap().getOrDefault(e.getKey(), 100);
+                lines.add(e.getKey() + "|" + e.getValue() + "|" + max);
+            }
+            lines.add("META_TOOLS_END");
+
+            lines.add("META_COMBO");
+            lines.add(farms.getHarvestComboCount() + "|" + farms.getHarvestComboExpiryMs());
+
+            lines.add("META_ACHIEVEMENTS");
+            lines.add(farms.getTotalHarvested() + "|" + farms.getTotalSold() + "|" + farms.getTotalCompostUsed() + "|" + farms.getPermanentSellBonus());
+            lines.add(String.valueOf(farms.getUnlockedAchievements().size()));
+            for (String achv : farms.getUnlockedAchievements()) {
+                lines.add(achv);
+            }
+
             lines.add(CHECKSUM_PREFIX + computeChecksum(lines));
             Files.write(tempPath, lines, StandardCharsets.UTF_8);
 
@@ -123,13 +182,21 @@ public class SaveSystem {
     }
 
     public static void load(Farms farms, int slot) {
-        File file = new File(getFilePath(slot));
-        if (!file.exists()) return;
+        Path mainPath = Path.of(getFilePath(slot));
+        Path backupPath = Path.of(getFilePath(slot) + ".bak");
+        boolean loaded = tryLoadFromPath(farms, slot, mainPath, false);
+        if (!loaded) {
+            tryLoadFromPath(farms, slot, backupPath, true);
+        }
+    }
+
+    private static boolean tryLoadFromPath(Farms farms, int slot, Path path, boolean fromBackup) {
+        if (!Files.exists(path)) return false;
         farms.resetBeforeLoad();
 
         try {
-            List<String> lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-            if (lines.isEmpty()) return;
+            List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+            if (lines.isEmpty()) return false;
 
             int startIndex = 0;
             int dataEndExclusive = lines.size();
@@ -145,15 +212,15 @@ public class SaveSystem {
                 List<String> checksumSource = lines.subList(0, lines.size() - 1);
                 long actualChecksum = computeChecksum(checksumSource);
                 if (expectedChecksum != actualChecksum) {
-                    System.out.println("Checksum invalide pour save slot " + slot);
-                    return;
+                    System.out.println("Checksum invalide pour save slot " + slot + (fromBackup ? " (.bak)" : ""));
+                    return false;
                 }
                 dataEndExclusive = lines.size() - 1;
             }
 
             if (parsedVersion > SAVE_VERSION) {
                 System.out.println("Version de sauvegarde non supportee : " + parsedVersion);
-                return;
+                return false;
             }
 
             int idx = startIndex;
@@ -207,6 +274,36 @@ public class SaveSystem {
                 }
             }
 
+            if (parsedVersion >= 5 && idx < dataEndExclusive && lines.get(idx).equals("PLOT_FERTILITY_START")) {
+                idx++;
+                for (int i = 0; i < farms.getNbLINES(); i++) {
+                    for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
+                        if (idx >= dataEndExclusive) break;
+                        String line = lines.get(idx++);
+                        if ("PLOT_FERTILITY_END".equals(line)) break;
+                        farms.getField()[i][j].setFertility(Double.parseDouble(line));
+                    }
+                }
+                while (idx < dataEndExclusive && !lines.get(idx).equals("PLOT_FERTILITY_END")) idx++;
+                if (idx < dataEndExclusive) idx++;
+            }
+            if (idx < dataEndExclusive && lines.get(idx).equals("PLOT_ROTATION_START")) {
+                idx++;
+                for (int i = 0; i < farms.getNbLINES(); i++) {
+                    for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
+                        if (idx >= dataEndExclusive) break;
+                        String line = lines.get(idx++);
+                        if ("PLOT_ROTATION_END".equals(line)) break;
+                        String[] rot = line.split("\\|");
+                        if (rot.length >= 2) {
+                            farms.getField()[i][j].setRotationData(rot[0], Integer.parseInt(rot[1]));
+                        }
+                    }
+                }
+                while (idx < dataEndExclusive && !lines.get(idx).equals("PLOT_ROTATION_END")) idx++;
+                if (idx < dataEndExclusive) idx++;
+            }
+
             while (idx < dataEndExclusive) {
                 String line = lines.get(idx++);
                 if (line.equals("ANIMALS_STARTS")) continue;
@@ -222,6 +319,10 @@ public class SaveSystem {
                 if (a != null && parts.length > 2) {
                     a.setHungry(Boolean.parseBoolean(parts[1]));
                     a.setProduced(Boolean.parseBoolean(parts[2]));
+                    if (parts.length > 4) {
+                        a.setHealth(Double.parseDouble(parts[3]));
+                        a.setHappiness(Double.parseDouble(parts[4]));
+                    }
                     farms.addAnimals(a);
                 }
             }
@@ -276,12 +377,109 @@ public class SaveSystem {
                                     Double.parseDouble(qp[2]), Integer.parseInt(qp[3])));
                         }
                     }
+                    continue;
+                }
+                if (line.equals("META_QUALITY_START")) {
+                    if (idx < dataEndExclusive) {
+                        int count = Integer.parseInt(lines.get(idx++));
+                        for (int i = 0; i < count && idx < dataEndExclusive; i++) {
+                            String[] qp = lines.get(idx++).split("\\|");
+                            if (qp.length < 3) continue;
+                            farms.getCropQualityBonusPool().put(qp[0], Double.parseDouble(qp[1]));
+                            farms.getCropQualityUnits().put(qp[0], Integer.parseInt(qp[2]));
+                        }
+                    }
+                    while (idx < dataEndExclusive && !lines.get(idx).equals("META_QUALITY_END")) idx++;
+                    if (idx < dataEndExclusive) idx++;
+                    continue;
+                }
+                if (line.equals("META_SPECIAL_ORDER") && idx < dataEndExclusive) {
+                    String[] sp = lines.get(idx++).split("\\|");
+                    if (sp.length >= 3) {
+                        int orderDay = sp.length >= 4 ? Integer.parseInt(sp[3]) : farms.getGameDay();
+                        farms.setSpecialOrder(sp[0], Double.parseDouble(sp[1]), Long.parseLong(sp[2]), orderDay);
+                    }
+                    continue;
+                }
+                if (line.equals("META_STORE_STOCK_START")) {
+                    java.util.Map<String, Integer> restoredStock = new java.util.HashMap<>();
+                    long restoredNextRestock = System.currentTimeMillis() + (5 * 60 * 1000L);
+                    if (idx < dataEndExclusive) {
+                        int count = Integer.parseInt(lines.get(idx++));
+                        for (int i = 0; i < count && idx < dataEndExclusive; i++) {
+                            String[] st = lines.get(idx++).split("\\|");
+                            if (st.length < 2) continue;
+                            restoredStock.put(st[0], Integer.parseInt(st[1]));
+                        }
+                        if (idx < dataEndExclusive) {
+                            restoredNextRestock = Long.parseLong(lines.get(idx++));
+                        }
+                    }
+                    StoreController.restoreSeedStocks(restoredStock, restoredNextRestock);
+                    while (idx < dataEndExclusive && !lines.get(idx).equals("META_STORE_STOCK_END")) idx++;
+                    if (idx < dataEndExclusive) idx++;
+                    continue;
+                }
+                if (line.equals("META_SEASON") && idx < dataEndExclusive) {
+                    String[] sp = lines.get(idx++).split("\\|");
+                    if (sp.length >= 2) {
+                        farms.setCurrentSeason(Farms.Season.valueOf(sp[0]));
+                        farms.setNextSeasonChangeMs(Long.parseLong(sp[1]));
+                        if (sp.length >= 3) {
+                            farms.setGameDay(Integer.parseInt(sp[2]));
+                        }
+                    }
+                    continue;
+                }
+                if (line.equals("META_TOOLS_START")) {
+                    farms.getToolDurabilityMap().clear();
+                    farms.getToolMaxDurabilityMap().clear();
+                    if (idx < dataEndExclusive) {
+                        int count = Integer.parseInt(lines.get(idx++));
+                        for (int i = 0; i < count && idx < dataEndExclusive; i++) {
+                            String[] tool = lines.get(idx++).split("\\|");
+                            if (tool.length < 3) continue;
+                            farms.getToolDurabilityMap().put(tool[0], Integer.parseInt(tool[1]));
+                            farms.getToolMaxDurabilityMap().put(tool[0], Integer.parseInt(tool[2]));
+                        }
+                    }
+                    while (idx < dataEndExclusive && !lines.get(idx).equals("META_TOOLS_END")) idx++;
+                    if (idx < dataEndExclusive) idx++;
+                    continue;
+                }
+                if (line.equals("META_COMBO") && idx < dataEndExclusive) {
+                    String[] combo = lines.get(idx++).split("\\|");
+                    if (combo.length >= 2) {
+                        farms.setHarvestComboState(Integer.parseInt(combo[0]), Long.parseLong(combo[1]));
+                    }
+                    continue;
+                }
+                if (line.equals("META_ACHIEVEMENTS") && idx < dataEndExclusive) {
+                    String[] meta = lines.get(idx++).split("\\|");
+                    if (meta.length >= 4) {
+                        farms.setTotalHarvested(Integer.parseInt(meta[0]));
+                        farms.setTotalSold(Integer.parseInt(meta[1]));
+                        farms.setTotalCompostUsed(Integer.parseInt(meta[2]));
+                        farms.setPermanentSellBonus(Double.parseDouble(meta[3]));
+                    }
+                    if (idx < dataEndExclusive) {
+                        int count = Integer.parseInt(lines.get(idx++));
+                        for (int i = 0; i < count && idx < dataEndExclusive; i++) {
+                            farms.getUnlockedAchievements().add(lines.get(idx++));
+                        }
+                    }
                 }
             }
+            if (fromBackup) {
+                System.out.println("Chargement effectue depuis le backup pour le slot " + slot);
+            }
+            return true;
         } catch (IOException e) {
             System.out.println("No Saves Found");
+            return false;
         } catch (Exception e) {
-            System.out.println("Erreur de chargement de la sauvegarde slot " + slot + " : " + e.getMessage());
+            System.out.println("Erreur de chargement de la sauvegarde slot " + slot + (fromBackup ? " (.bak)" : "") + " : " + e.getMessage());
+            return false;
         }
     }
 

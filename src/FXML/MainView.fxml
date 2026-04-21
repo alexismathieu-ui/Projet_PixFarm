@@ -35,13 +35,13 @@
     <left>
         <VBox spacing="10" alignment="TOP_CENTER" styleClass="side-bar">
 
-            <Label text="≡  NAVIGATION" styleClass="side-title"/>
+            <Label fx:id="navTitleLabel" text="≡  NAVIGATION" styleClass="side-title"/>
             <Region styleClass="side-separator"/>
 
-            <Button onAction="#onOpenStore"      text="🛒  Marchand"    maxWidth="Infinity" styleClass="nav-btn"/>
-            <Button onAction="#onOpenInventory"  text="🎒  Sac à dos"   maxWidth="Infinity" styleClass="nav-btn"/>
-            <Button onAction="#onOpenQuestBoard" text="📋  Quêtes"      maxWidth="Infinity" styleClass="nav-btn"/>
-            <Button onAction="#onOpenSettings"   text="⚙  Parametres"   maxWidth="Infinity" styleClass="nav-btn"/>
+            <Button fx:id="storeBtn" onAction="#onOpenStore"      text="🛒  Marchand"    maxWidth="Infinity" styleClass="nav-btn"/>
+            <Button fx:id="inventoryBtn" onAction="#onOpenInventory"  text="🎒  Sac à dos"   maxWidth="Infinity" styleClass="nav-btn"/>
+            <Button fx:id="questBtn" onAction="#onOpenQuestBoard" text="📋  Quêtes"      maxWidth="Infinity" styleClass="nav-btn"/>
+            <Button fx:id="settingsBtn" onAction="#onOpenSettings"   text="⚙  Parametres"   maxWidth="Infinity" styleClass="nav-btn"/>
             <Button fx:id="barnButton" onAction="#goToBarn" text="🏠  Grange" maxWidth="Infinity" styleClass="barn-btn"/>
 
             <Region VBox.vgrow="ALWAYS"/>
@@ -50,7 +50,7 @@
             <Button fx:id="adminBtn" onAction="#onOpenAdmin"
                     text=" " maxWidth="Infinity"
                     style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-pref-height: 6px; -fx-min-height: 6px; -fx-max-height: 6px; -fx-cursor: default; -fx-opacity: 0;"/>
-            <Button onAction="#onSave" text="💾  Sauvegarder" maxWidth="Infinity" styleClass="save-btn"/>
+            <Button fx:id="saveBtn" onAction="#onSave" text="💾  Sauvegarder" maxWidth="Infinity" styleClass="save-btn"/>
 
         </VBox>
     </left>
@@ -69,7 +69,7 @@
 
     <right>
         <VBox spacing="8" styleClass="side-bar" prefWidth="240">
-            <Label text="JOURNAL" styleClass="side-title"/>
+            <Label fx:id="logTitleLabel" text="JOURNAL" styleClass="side-title"/>
             <Region styleClass="side-separator"/>
             <ListView fx:id="eventLogList" prefHeight="420"/>
         </VBox>
@@ -79,8 +79,8 @@
         <VBox spacing="10" alignment="CENTER" styleClass="bottom-bar">
 
             <HBox alignment="CENTER" spacing="20">
-                <Label text="🌱  VOS GRAINES :" styleClass="bottom-label"/>
-                <Button onAction="#onActionHarvest" text="🧺  TOUT RÉCOLTER" styleClass="harvest-btn"/>
+                <Label fx:id="seedsTitleLabel" text="🌱  VOS GRAINES :" styleClass="bottom-label"/>
+                <Button fx:id="harvestAllBtn" onAction="#onActionHarvest" text="🧺  TOUT RÉCOLTER" styleClass="harvest-btn"/>
             </HBox>
 
             <HBox spacing="8" alignment="CENTER">
@@ -169,6 +169,15 @@
                                 <image><Image url="@../Sprite/images/Icons/ananasIC.png"/></image>
                             </ImageView>
                             <Label text="Ananas" style="-fx-text-fill:#e8f5e0; -fx-font-size:11px; -fx-font-weight:bold; -fx-font-family:'Courier New';"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="Compost_Crop" onAction="#handleselectSeed" styleClass="seed-btn">
+                    <graphic>
+                        <VBox alignment="CENTER" spacing="2">
+                            <Label text="♻️" style="-fx-text-fill:#e8f5e0; -fx-font-size:20px; -fx-font-weight:bold; -fx-font-family:'Courier New';"/>
+                            <Label text="Compost" style="-fx-text-fill:#e8f5e0; -fx-font-size:11px; -fx-font-weight:bold; -fx-font-family:'Courier New';"/>
                         </VBox>
                     </graphic>
                 </Button>

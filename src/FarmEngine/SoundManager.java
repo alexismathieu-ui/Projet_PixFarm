@@ -11,12 +11,31 @@ import java.util.Map;
 public final class SoundManager {
     private static final Map<String, AudioClip> CLIPS = new HashMap<>();
     private static MediaPlayer musicPlayer;
+    private static boolean mediaUnavailableLogged;
 
     private SoundManager() {}
 
+    private static URL resolveAudioUrl(String resourcePath) {
+        URL direct = SoundManager.class.getResource(resourcePath);
+        if (direct != null) return direct;
+
+        // Compatibility fallback if resources are stored in subfolders (music/sfx).
+        if (resourcePath.startsWith("/Audio/")) {
+            String filename = resourcePath.substring("/Audio/".length());
+            String altMusic = "/Audio/music/" + filename;
+            URL music = SoundManager.class.getResource(altMusic);
+            if (music != null) return music;
+
+            String altSfx = "/Audio/sfx/" + filename;
+            URL sfx = SoundManager.class.getResource(altSfx);
+            if (sfx != null) return sfx;
+        }
+        return null;
+    }
+
     public static void playMusic(String resourcePath) {
         try {
-            URL url = SoundManager.class.getResource(resourcePath);
+            URL url = resolveAudioUrl(resourcePath);
             if (url == null) return;
             if (musicPlayer != null) {
                 musicPlayer.stop();
@@ -26,7 +45,11 @@ public final class SoundManager {
             musicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
             musicPlayer.setVolume(GameSettings.getVolume());
             musicPlayer.play();
-        } catch (Exception ignored) {
+        } catch (Throwable t) {
+            if (!mediaUnavailableLogged) {
+                System.out.println("Audio media indisponible sur ce runtime: " + t.getClass().getSimpleName() + " - " + t.getMessage());
+                mediaUnavailableLogged = true;
+            }
         }
     }
 
@@ -45,12 +68,16 @@ public final class SoundManager {
     public static void playSfx(String resourcePath) {
         try {
             AudioClip clip = CLIPS.computeIfAbsent(resourcePath, key -> {
-                URL url = SoundManager.class.getResource(key);
+                URL url = resolveAudioUrl(key);
                 return url != null ? new AudioClip(url.toExternalForm()) : null;
             });
             if (clip == null) return;
             clip.play(GameSettings.getVolume());
-        } catch (Exception ignored) {
+        } catch (Throwable t) {
+            if (!mediaUnavailableLogged) {
+                System.out.println("Audio media indisponible sur ce runtime: " + t.getClass().getSimpleName() + " - " + t.getMessage());
+                mediaUnavailableLogged = true;
+            }
         }
     }
 }

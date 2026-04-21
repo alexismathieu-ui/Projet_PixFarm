@@ -13,8 +13,8 @@
     <HBox styleClass="quest-header" alignment="CENTER_LEFT" spacing="12">
         <Label text="📋" style="-fx-font-size:28px;"/>
         <VBox spacing="2">
-            <Label text="TABLEAU DES QUÊTES" styleClass="quest-title"/>
-            <Label text="Livrez vos récoltes pour gagner des récompenses !" styleClass="quest-subtitle"/>
+            <Label fx:id="headerTitleLabel" text="TABLEAU DES QUÊTES" styleClass="quest-title"/>
+            <Label fx:id="headerSubtitleLabel" text="Livrez vos récoltes pour gagner des récompenses !" styleClass="quest-subtitle"/>
         </VBox>
     </HBox>
 
@@ -28,7 +28,7 @@
     </ScrollPane>
 
     <HBox styleClass="quest-footer" alignment="CENTER">
-        <Button text="✖  FERMER" onAction="#close" styleClass="btn-close"/>
+        <Button fx:id="closeBtn" text="✖  FERMER" onAction="#close" styleClass="btn-close"/>
     </HBox>
 
 </VBox>

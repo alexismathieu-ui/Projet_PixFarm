@@ -4,7 +4,7 @@ import Farm.Animals;
 
 public class Chicken extends Animals {
     public Chicken() {
-        super("Chicken", 2000.0, 5);
+        super("Chicken", 900.0, 4);
     }
 
     @Override

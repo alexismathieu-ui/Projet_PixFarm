@@ -26,6 +26,7 @@ public class GameTimer {
 
         this.oneminrefr = new Timeline(new KeyFrame(Duration.seconds(60),event -> {
             farms.updateWeather();
+            farms.refreshSeasonIfNeeded();
             updateUI.run();
         }));
         oneminrefr.setCycleCount(Timeline.INDEFINITE);
@@ -43,17 +44,21 @@ public class GameTimer {
     }
 
     public void tick(){
-        double multiplier = switch (farms.getCurrentWeather()) {
+        double weatherMultiplier = switch (farms.getCurrentWeather()) {
             case SUNNY -> 1.0;
             case RAINY -> 1.5;
             case THUNDERSTORM -> 2.0;
             case DROUGHT -> 0.5;
+            case BLESSING_RAIN -> 1.8;
+            case MIST -> 0.85;
         };
         for (int i = 0; i < farms.getNbLINES(); i ++){
             for (int j = 0; j < farms.getNbCOLMUNS(); j++){
                 Plot ground = farms.getField()[i][j];
                 if (ground.getActualCulture() != null){
-                    ground.getActualCulture().growing(multiplier);
+                    double fertilityFactor = ground.getFertility();
+                    double seasonMultiplier = farms.getSeasonCropMultiplier(ground.getActualCulture().getName());
+                    ground.getActualCulture().growing(weatherMultiplier * fertilityFactor * seasonMultiplier);
                 }
             }
         }

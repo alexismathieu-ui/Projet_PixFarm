@@ -4,6 +4,9 @@ import Farm.Animals;
 import Farm.Enclosure.Enclosure;
 import Farm.Enclosure.EnclosureManager;
 import Farm.Farms;
+import FarmEngine.AudioPaths;
+import FarmEngine.I18n;
+import FarmEngine.SoundManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -39,6 +42,7 @@ public class BarnController {
 
     public void setFarms(Farms farms) {
         this.farms = farms;
+        SoundManager.playMusic(AudioPaths.MUSIC_RANCH);
 
         // Init enclosure manager from Farms (or create new)
         if (farms.getEnclosureManager() == null) {
@@ -64,11 +68,11 @@ public class BarnController {
 
     private void updateLevelUI() {
         if (levelLabel != null) {
-            levelLabel.setText("Niveau " + farms.getLevel());
+            levelLabel.setText(I18n.tr("barn.level", farms.getLevel()));
             double progress = farms.getCurrentXP() / farms.getNextLevelXP();
             xpBar.setProgress(progress);
             if (xpLabel != null)
-                xpLabel.setText((int)farms.getCurrentXP() + " / " + (int)farms.getNextLevelXP() + " XP");
+                xpLabel.setText(I18n.tr("barn.xp", (int)farms.getCurrentXP(), (int)farms.getNextLevelXP()));
         }
     }
 
@@ -79,10 +83,15 @@ public class BarnController {
         int enclCount = enclosureManager.getEnclosures().size();
         int maxEncl = enclosureManager.getMaxEnclosures();
 
-        animalCountLabel.setText("🐾 Animaux : " + total);
-        readyCountLabel.setText("✅ Prêts : " + ready);
-        hungryCountLabel.setText("🍽️ Affamés : " + hungry);
-        enclosureCountLabel.setText("🏠 Enclos : " + enclCount + "/" + maxEncl);
+        animalCountLabel.setText(I18n.tr("barn.stats.animals", total));
+        readyCountLabel.setText(I18n.tr("barn.stats.ready", ready));
+        hungryCountLabel.setText(I18n.tr("barn.stats.hungry", hungry));
+        enclosureCountLabel.setText(I18n.tr("barn.stats.enclosures", enclCount, maxEncl));
+        if (bottomStatus != null && total > 0) {
+            double avgHealth = farms.getMyAnimals().stream().mapToDouble(Animals::getHealth).average().orElse(100.0);
+            double avgHappiness = farms.getMyAnimals().stream().mapToDouble(Animals::getHappiness).average().orElse(100.0);
+            bottomStatus.setText(I18n.tr("enclosure.animal.stats", (int) avgHealth, (int) avgHappiness));
+        }
     }
 
     private void refreshEnclosureGrid() {
@@ -125,7 +134,7 @@ public class BarnController {
         capBar.getStyleClass().add("capacity-bar");
 
         // Count
-        Label countLabel = new Label(encl.getAnimalCount() + " / " + encl.getMaxCapacity() + " animaux");
+        Label countLabel = new Label(I18n.tr("barn.enclosure.count", encl.getAnimalCount(), encl.getMaxCapacity()));
         countLabel.getStyleClass().add("enclosure-count");
 
         // Status
@@ -156,10 +165,10 @@ public class BarnController {
     }
 
     private String getEnclosureStatus(Enclosure encl) {
-        if (encl.isEmpty()) return "Vide — Cliquer pour gérer";
-        if (encl.getReadyCount() > 0) return "✅ " + encl.getReadyCount() + " prêt(s) à récolter !";
-        if (encl.getHungryCount() > 0) return "🍽️ " + encl.getHungryCount() + " affamé(s) !";
-        return "⚙️ En production...";
+        if (encl.isEmpty()) return I18n.tr("barn.enclosure.status.empty");
+        if (encl.getReadyCount() > 0) return I18n.tr("barn.enclosure.status.ready", encl.getReadyCount());
+        if (encl.getHungryCount() > 0) return I18n.tr("barn.enclosure.status.hungry", encl.getHungryCount());
+        return I18n.tr("barn.enclosure.status.working");
     }
 
     private void openEnclosureDetail(Enclosure encl) {
@@ -174,7 +183,7 @@ public class BarnController {
             });
 
             Stage stage = new Stage();
-            stage.setTitle("Enclos — " + encl.getName());
+            stage.setTitle(I18n.tr("barn.enclosure.title", encl.getName()));
             stage.initOwner(barnRoot.getScene().getWindow());
             stage.initModality(javafx.stage.Modality.WINDOW_MODAL);
             stage.setScene(new Scene(root));
@@ -187,14 +196,14 @@ public class BarnController {
     @FXML
     private void onAddEnclosure() {
         if (!enclosureManager.canAddMoreEnclosures()) {
-            setStatus("❌ Nombre maximum d'enclos atteint !");
+            setStatus(I18n.tr("barn.status.maxEnclosures"));
             return;
         }
         int n = enclosureManager.getEnclosures().size() + 1;
-        enclosureManager.addEnclosure("Enclos " + n, 4);
+        enclosureManager.addEnclosure(I18n.tr("barn.enclosure.name", n), 4);
         refreshEnclosureGrid();
         updateStats();
-        setStatus("✅ Enclos " + n + " créé !");
+        setStatus(I18n.tr("barn.status.enclosureCreated", n));
     }
 
     @FXML
@@ -203,6 +212,7 @@ public class BarnController {
         Parent root = loader.load();
         MainController mainCtrl = loader.getController();
         mainCtrl.setFarms(this.farms);
+        SoundManager.playMusic(AudioPaths.MUSIC_GAME);
         Stage stage = (Stage) barnRoot.getScene().getWindow();
         stage.getScene().setRoot(root);
     }
@@ -219,7 +229,7 @@ public class BarnController {
                 updateStats();
             });
             Stage stage = new Stage();
-            stage.setTitle("Marchand d'animaux");
+            stage.setTitle(I18n.tr("animalShop.title"));
             stage.initOwner(barnRoot.getScene().getWindow());
             stage.initModality(javafx.stage.Modality.WINDOW_MODAL);
             stage.setScene(new Scene(root));
@@ -237,7 +247,7 @@ public class BarnController {
             currentInventoryCtrl = loader.getController();
             currentInventoryCtrl.update(this.farms);
             Stage stage = new Stage();
-            stage.setTitle("Inventaire");
+            stage.setTitle(I18n.tr("inventory.title"));
             stage.setScene(new Scene(root));
             stage.setOnCloseRequest(e -> currentInventoryCtrl = null);
             stage.show();

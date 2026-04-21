@@ -12,10 +12,10 @@
     <top>
         <HBox alignment="CENTER_LEFT" spacing="14" styleClass="inv-topbar">
             <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
-            <Label text="🎒 SAC À DOS" styleClass="inv-title"/>
+            <Label fx:id="invTitleLabel" text="🎒 SAC À DOS" styleClass="inv-title"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="totalItemsLabel" text="0 objets" styleClass="inv-count"/>
-            <Button text="✖ Fermer" onAction="#closeInventory" styleClass="inv-close-btn"/>
+            <Button fx:id="closeBtn" text="✖ Fermer" onAction="#closeInventory" styleClass="inv-close-btn"/>
         </HBox>
     </top>
 
@@ -25,17 +25,26 @@
                 <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
 
                 <VBox spacing="8" styleClass="inv-section">
-                    <Label text="🌱 GRAINES" styleClass="inv-section-title"/>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="Filtre"/>
+                        <ComboBox fx:id="filterTypeCombo" prefWidth="130.0"/>
+                        <CheckBox fx:id="filterNonEmptyCheck" text="Non vides"/>
+                    </HBox>
+                    <Label fx:id="toolsDurabilityLabel" text="Outils: -"/>
+                </VBox>
+
+                <VBox spacing="8" styleClass="inv-section">
+                    <Label fx:id="seedSectionLabel" text="🌱 GRAINES" styleClass="inv-section-title"/>
                     <GridPane fx:id="seedGrid" hgap="10" vgap="10"/>
                 </VBox>
 
                 <VBox spacing="8" styleClass="inv-section">
-                    <Label text="🌾 RÉCOLTES" styleClass="inv-section-title"/>
+                    <Label fx:id="cropSectionLabel" text="🌾 RÉCOLTES" styleClass="inv-section-title"/>
                     <GridPane fx:id="cropGrid" hgap="10" vgap="10"/>
                 </VBox>
 
                 <VBox spacing="8" styleClass="inv-section">
-                    <Label text="🐾 PRODUITS ANIMAUX" styleClass="inv-section-title"/>
+                    <Label fx:id="animalSectionLabel" text="🐾 PRODUITS ANIMAUX" styleClass="inv-section-title"/>
                     <GridPane fx:id="animalGrid" hgap="10" vgap="10"/>
                 </VBox>
 

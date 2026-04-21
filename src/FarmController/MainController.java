@@ -25,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -35,6 +36,7 @@ import javafx.stage.Stage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseButton;
 
 import java.io.IOException;
 import java.util.Random;
@@ -51,6 +53,15 @@ public class MainController {
     @FXML private Label weatherLabel;
     @FXML private Button adminBtn;
     @FXML private ListView<String> eventLogList;
+    @FXML private Label navTitleLabel;
+    @FXML private Button storeBtn;
+    @FXML private Button inventoryBtn;
+    @FXML private Button questBtn;
+    @FXML private Button settingsBtn;
+    @FXML private Button saveBtn;
+    @FXML private Label logTitleLabel;
+    @FXML private Label seedsTitleLabel;
+    @FXML private Button harvestAllBtn;
 
     private Farms farms;
     private GameTimer gameTimer;
@@ -71,7 +82,25 @@ public class MainController {
         if (eventLogList != null) {
             eventLogList.setItems(eventLogItems);
         }
+        applyStaticTexts();
         refreshGrid();
+    }
+
+    private void applyStaticTexts() {
+        if (navTitleLabel != null) navTitleLabel.setText("≡  " + I18n.tr("main.nav"));
+        if (storeBtn != null) storeBtn.setText("🛒  " + I18n.tr("main.nav.store"));
+        if (inventoryBtn != null) inventoryBtn.setText("🎒  " + I18n.tr("main.nav.inventory"));
+        if (questBtn != null) questBtn.setText("📋  " + I18n.tr("main.nav.quests"));
+        if (settingsBtn != null) settingsBtn.setText("⚙  " + I18n.tr("main.nav.settings"));
+        if (saveBtn != null) saveBtn.setText("💾  " + I18n.tr("main.save"));
+        if (logTitleLabel != null) logTitleLabel.setText(I18n.tr("main.log"));
+        if (seedsTitleLabel != null) seedsTitleLabel.setText("🌱  " + I18n.tr("main.seeds"));
+        if (harvestAllBtn != null) harvestAllBtn.setText("🧺  " + I18n.tr("main.harvestAll"));
+        if (storeBtn != null) storeBtn.setTooltip(new Tooltip(I18n.tr("tooltip.main.store")));
+        if (inventoryBtn != null) inventoryBtn.setTooltip(new Tooltip(I18n.tr("tooltip.main.inventory")));
+        if (questBtn != null) questBtn.setTooltip(new Tooltip(I18n.tr("tooltip.main.quests")));
+        if (saveBtn != null) saveBtn.setTooltip(new Tooltip(I18n.tr("tooltip.main.save")));
+        if (harvestAllBtn != null) harvestAllBtn.setTooltip(new Tooltip(I18n.tr("tooltip.main.harvestAll")));
     }
 
     private void updateUI(){
@@ -81,7 +110,7 @@ public class MainController {
         double progress = farms.getCurrentXP() / farms.getNextLevelXP();
         xpBar.setProgress(progress);
         levelLabel.setText(I18n.tr("main.level", farms.getLevel()));
-        xpLabel.setText((int)farms.getCurrentXP() + " / " + (int)farms.getNextLevelXP() + " XP");
+        xpLabel.setText(I18n.tr("main.xp", (int)farms.getCurrentXP(), (int)farms.getNextLevelXP()));
 
         barnButton.setDisable(farms.getLevel() < 5);
         if (farms.getLevel() >= 5) {
@@ -93,18 +122,35 @@ public class MainController {
         }
 
         String weatherText = switch (farms.getCurrentWeather()) {
-            case SUNNY -> "☀️ Soleil (x1)";
-            case RAINY -> "🌧️ Pluie (x1.5)";
-            case THUNDERSTORM -> "⚡ Orage (x2)";
-            case DROUGHT -> "🔥Sécheresse (x0.5)";
+            case SUNNY -> I18n.tr("main.weather.sunny");
+            case RAINY -> I18n.tr("main.weather.rainy");
+            case THUNDERSTORM -> I18n.tr("main.weather.thunderstorm");
+            case DROUGHT -> I18n.tr("main.weather.drought");
+            case BLESSING_RAIN -> I18n.tr("main.weather.blessingRain");
+            case MIST -> I18n.tr("main.weather.mist");
         };
-        weatherLabel.setText(I18n.tr("main.weather", weatherText));
+        String seasonText = switch (farms.getCurrentSeason()) {
+            case SPRING -> I18n.tr("main.season.spring");
+            case SUMMER -> I18n.tr("main.season.summer");
+            case AUTUMN -> I18n.tr("main.season.autumn");
+            case WINTER -> I18n.tr("main.season.winter");
+        };
+        String favored = farms.getCurrentSeason() == Farms.Season.SPRING ? "Wheat, Strawberry"
+                : farms.getCurrentSeason() == Farms.Season.SUMMER ? "Tomato, Corn, Lemon"
+                : farms.getCurrentSeason() == Farms.Season.AUTUMN ? "Potato, Carrot"
+                : "Pineapple";
+        weatherLabel.setText(I18n.tr("main.weather", weatherText) + " | " + I18n.tr("main.season", seasonText)
+                + " | " + I18n.tr("main.season.favored", favored));
 
         if (farms.getLevel() > lastDisplayedLevel) {
-            logEvent("Niveau " + farms.getLevel() + " atteint.");
+            logEvent(I18n.tr("main.log.levelReached", farms.getLevel()));
             lastDisplayedLevel = farms.getLevel();
         } else if (farms.getLevel() < lastDisplayedLevel) {
             lastDisplayedLevel = farms.getLevel();
+        }
+
+        for (String achievementKey : farms.evaluateAchievements()) {
+            logEvent(I18n.tr("main.log.achievementUnlocked", I18n.tr(achievementKey)));
         }
     }
 
@@ -213,7 +259,12 @@ public class MainController {
                             visualCell.setStyle("-fx-border-color: gold; -fx-border-width: 2;");
                         }
                     }
-                    visualCell.setOnMouseClicked(event -> handleCellClick(plotting));
+                    Label fertilityLabel = new Label(I18n.tr("main.fertility.short", (int) Math.round(plotting.getFertility() * 100)));
+                    fertilityLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #d2ff9e; -fx-font-weight: bold;");
+                    StackPane.setAlignment(fertilityLabel, javafx.geometry.Pos.TOP_LEFT);
+                    visualCell.getChildren().add(fertilityLabel);
+
+                    visualCell.setOnMouseClicked(event -> handleCellClick(plotting, event.getButton() == MouseButton.SECONDARY));
                 }
                 farmGrid.add(visualCell, j, i);
             }
@@ -237,39 +288,84 @@ public class MainController {
         Button btnSeed = (Button) event.getSource();
 
         this.selectedSeed = btnSeed.getId();
-        labelStatus.setText("Seed Selected : " + selectedSeed);
+        if ("Compost_Crop".equals(this.selectedSeed)) {
+            labelStatus.setText(I18n.tr("main.status.compost.selected"));
+        } else {
+            labelStatus.setText(I18n.tr("main.status.seedSelected", getDisplayItemName(selectedSeed)));
+        }
     }
 
-    private void handleCellClick(Plot plotting) {
+    private void handleCellClick(Plot plotting, boolean useCompost) {
         if(plotting.isLocked()){
-            double cost = 500;
-            if (farms.spending(cost)){
-                plotting.setLocked(false);
-                labelStatus.setText("Parcelle Achetée");
-                updateUI();
-            }else {
-                labelStatus.setText("Pas assez d'argent ( " + cost + " $ requis)");
-            }
+            handlePurchasePlot(plotting);
+            refreshGrid();
+            return;
         }
         if (plotting.isEmpty()) {
+            if ("Compost_Crop".equals(selectedSeed)) {
+                if (!farms.useTool("CompostShovel", 1)) {
+                    labelStatus.setText(I18n.tr("main.status.toolBroken", "CompostShovel"));
+                    return;
+                }
+                if (farms.getInventory().getQuantity("Compost_Crop") > 0) {
+                    farms.getInventory().add("Compost_Crop", -1);
+                    plotting.boostFertility(0.22);
+                    farms.addCompostUsed(1);
+                    refreshInventoryUI();
+                    labelStatus.setText(I18n.tr("main.status.compost.used", (int) Math.round(plotting.getFertility() * 100)));
+                } else {
+                    labelStatus.setText(I18n.tr("main.status.compost.missing"));
+                }
+                refreshGrid();
+                return;
+            }
+            if (useCompost) {
+                if (!farms.useTool("CompostShovel", 1)) {
+                    labelStatus.setText(I18n.tr("main.status.toolBroken", "CompostShovel"));
+                    return;
+                }
+                if (farms.getInventory().getQuantity("Compost_Crop") > 0) {
+                    farms.getInventory().add("Compost_Crop", -1);
+                    plotting.boostFertility(0.22);
+                    farms.addCompostUsed(1);
+                    refreshInventoryUI();
+                    labelStatus.setText(I18n.tr("main.status.compost.used", (int) Math.round(plotting.getFertility() * 100)));
+                } else {
+                    labelStatus.setText(I18n.tr("main.status.compost.missing"));
+                }
+                refreshGrid();
+                return;
+            }
             if (farms.getInventory().getQuantity(selectedSeed) > 0) {
+                if (!farms.useTool("Hoe", 1)) {
+                    labelStatus.setText(I18n.tr("main.status.toolBroken", "Hoe"));
+                    return;
+                }
                 Culture toplant = createCulture(selectedSeed);
                 if (toplant != null){
                     farms.getInventory().add(selectedSeed, -1);
                     refreshInventoryUI();
                     plotting.planting(toplant);
-                    labelStatus.setText(toplant.getName() + " planted !");
+                    labelStatus.setText(I18n.tr("main.status.planted", toplant.getName()));
                 }
             } else {
-                labelStatus.setText("Not enough " + selectedSeed + " in stock !");
+                labelStatus.setText(I18n.tr("main.status.notEnoughInStock", getDisplayItemName(selectedSeed)));
             }
         } else if (plotting.getActualCulture().isReady()) {
-            String cropName = plotting.getActualCulture().getName() + "_Crop";
-            farms.getInventory().add(cropName, 1);
+            if (!farms.useTool("Sickle", 1)) {
+                labelStatus.setText(I18n.tr("main.status.toolBroken", "Sickle"));
+                return;
+            }
+            String cropName = plotting.getActualCulture().getName();
+            double qualityMultiplier = rollHarvestQualityMultiplier() * farms.registerHarvestCombo();
+            farms.addHarvestedCrop(cropName, qualityMultiplier);
             farms.addXP(50);
             refreshInventoryUI();
             plotting.collect();
-            labelStatus.setText("Collected : " + cropName);
+            String qualityText = qualityLabel(qualityMultiplier);
+            labelStatus.setText(I18n.tr("main.status.collected.quality", getDisplayItemName(cropName + "_Crop"), qualityText));
+            logEvent(I18n.tr("main.log.harvestQuality", getDisplayItemName(cropName + "_Crop"), qualityText));
+            maybeGrantCompost();
         }
         refreshGrid();
     }
@@ -280,11 +376,11 @@ public class MainController {
         if (farms.spending(cost)){
             plotting.setLocked(false);
             farms.incrementUnlockedPlots();
-            labelStatus.setText("Nouvelle Terre achetée !");
+            labelStatus.setText(I18n.tr("main.status.newLandBought"));
 
             updateUI();
         } else {
-            labelStatus.setText("Il vous manque " + (int)(cost - farms.getMoney()) + "$ !");
+            labelStatus.setText(I18n.tr("main.status.missingMoney", (int) (cost - farms.getMoney())));
         }
     }
 
@@ -364,11 +460,13 @@ public class MainController {
             for (int j = 0; j < farms.getNbCOLMUNS(); j++) {
                 Plot plot = farms.getField()[i][j];
                 if (!plot.isEmpty() && plot.getActualCulture().isReady()) {
-                    String cropName = plot.getActualCulture().getName() + "_Crop";
-                    farms.getInventory().add(cropName, 1);
+                    if (!farms.useTool("Sickle", 1)) continue;
+                    String cropName = plot.getActualCulture().getName();
+                    farms.addHarvestedCrop(cropName, rollHarvestQualityMultiplier() * farms.registerHarvestCombo());
                     farms.addXP(50);
                     plot.collect();
                     collected++;
+                    maybeGrantCompost();
                 }
             }
         }
@@ -376,10 +474,10 @@ public class MainController {
         refreshInventoryUI();
         refreshGrid();
         if (collected > 0) {
-            labelStatus.setText("Récolte terminée : " + collected + " culture(s) collectée(s).");
-            logEvent("Recolte globale: " + collected + " culture(s).");
+            labelStatus.setText(I18n.tr("main.status.harvestDone", collected));
+            logEvent(I18n.tr("main.log.harvestGlobal", collected));
         } else {
-            labelStatus.setText("Aucune culture prête à récolter.");
+            labelStatus.setText(I18n.tr("main.status.noneReady"));
         }
     }
 
@@ -393,7 +491,7 @@ public class MainController {
         this.gameTimer.start();
         startAutosave();
         lastDisplayedLevel = farms.getLevel();
-        logEvent("Partie chargee (slot " + farms.getCurrentSaveSlot() + ").");
+        logEvent(I18n.tr("main.log.gameLoaded", farms.getCurrentSaveSlot()));
 
         javafx.application.Platform.runLater(() -> {
             if (farmGrid.getScene() != null) {
@@ -413,7 +511,7 @@ public class MainController {
     private void onSaveClicked() {
         SaveSystem.saves(this.farms, this.farms.getCurrentSaveSlot());
         System.out.println("Sauvegarde effectuée sur le slot " + farms.getCurrentSaveSlot());
-        logEvent("Sauvegarde manuelle effectuee.");
+        logEvent(I18n.tr("main.log.manualSave"));
     }
 
     @FXML
@@ -455,8 +553,8 @@ public class MainController {
     @FXML
     private void onSave() {
         SaveSystem.saves(this.farms, this.farms.getCurrentSaveSlot());
-        labelStatus.setText("Game Saved !");
-        logEvent("Sauvegarde manuelle effectuee.");
+        labelStatus.setText(I18n.tr("main.status.gameSaved"));
+        logEvent(I18n.tr("main.log.manualSave"));
         SoundManager.playSfx(AudioPaths.SFX_SAVE);
     }
 
@@ -524,7 +622,7 @@ public class MainController {
         autosaveTimer = new Timeline(new KeyFrame(Duration.seconds(GameSettings.getAutosaveIntervalSeconds()), event -> {
             if (this.farms != null) {
                 SaveSystem.saves(this.farms, this.farms.getCurrentSaveSlot());
-                logEvent("Autosave (slot " + this.farms.getCurrentSaveSlot() + ").");
+                logEvent(I18n.tr("main.log.autosave", this.farms.getCurrentSaveSlot()));
             }
         }));
         autosaveTimer.setCycleCount(Timeline.INDEFINITE);
@@ -541,8 +639,9 @@ public class MainController {
             ctrl.setOnApply(() -> {
                 startAutosave();
                 updateUI();
+                applyStaticTexts();
                 SoundManager.updateVolume();
-                logEvent("Parametres appliques.");
+                logEvent(I18n.tr("main.log.settingsApplied"));
             });
 
             Stage settingsStage = new Stage();
@@ -561,6 +660,32 @@ public class MainController {
         eventLogItems.add(0, message);
         if (eventLogItems.size() > 30) {
             eventLogItems.remove(30, eventLogItems.size());
+        }
+    }
+
+    private String getDisplayItemName(String inventoryKey) {
+        if (inventoryKey == null) return "";
+        String base = inventoryKey.replace("_Seed", "").replace("_Crop", "");
+        return I18n.tr("quest.item." + base);
+    }
+
+    private double rollHarvestQualityMultiplier() {
+        double r = new Random().nextDouble();
+        if (r < 0.12) return 2.0;
+        if (r < 0.42) return 1.4;
+        return 1.0;
+    }
+
+    private String qualityLabel(double qualityMultiplier) {
+        if (qualityMultiplier >= 2.0) return I18n.tr("quality.epic");
+        if (qualityMultiplier >= 1.4) return I18n.tr("quality.rare");
+        return I18n.tr("quality.normal");
+    }
+
+    private void maybeGrantCompost() {
+        if (new Random().nextDouble() < 0.28) {
+            farms.getInventory().add("Compost_Crop", 1);
+            logEvent(I18n.tr("main.log.compostGained"));
         }
     }
 
