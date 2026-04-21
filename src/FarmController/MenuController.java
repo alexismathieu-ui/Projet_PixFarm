@@ -26,10 +26,16 @@ public class MenuController {
     @FXML private VBox menuPane;
     @FXML private Button slot1Btn;
     @FXML private Label lastSaveLabel;
+    @FXML private Button playBtn;
+    @FXML private Button continueBtn;
+    @FXML private Button quitBtn;
 
     @FXML
     public void initialize() {
         GameSettings.load();
+        playBtn.setText("🌱  " + I18n.tr("menu.play"));
+        continueBtn.setText("▶  " + I18n.tr("menu.continue"));
+        quitBtn.setText("✖  " + I18n.tr("menu.quit"));
         int slot = SaveSystem.getMostRecentSaveSlot();
         if (slot == -1) {
             lastSaveLabel.setText(I18n.tr("menu.continue.none"));
@@ -53,7 +59,7 @@ public class MenuController {
             });
 
             Stage stage = new Stage();
-            stage.setTitle("Sélection de la ferme");
+            stage.setTitle(I18n.tr("menu.saveSelection.title"));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
             stage.show();
@@ -100,7 +106,7 @@ public class MenuController {
 
 
             stage.setScene(scene);
-            stage.setTitle("Farm My Farm - Slot " + slotId);
+            stage.setTitle(I18n.tr("menu.game.title", slotId));
             stage.show();
 
         } catch (IOException e) {

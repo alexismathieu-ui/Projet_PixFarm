@@ -1,6 +1,7 @@
 package FarmController;
 
 import FarmEngine.GameSettings;
+import FarmEngine.I18n;
 import FarmEngine.SoundManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -14,6 +15,12 @@ public class SettingsController {
     @FXML private ComboBox<String> languageCombo;
     @FXML private Label autosaveValueLabel;
     @FXML private Label volumeValueLabel;
+    @FXML private Label headerLabel;
+    @FXML private Label autosaveLabel;
+    @FXML private Label volumeLabel;
+    @FXML private Label languageLabel;
+    @FXML private javafx.scene.control.Button cancelBtn;
+    @FXML private javafx.scene.control.Button applyBtn;
 
     private Runnable onApply;
 
@@ -23,6 +30,7 @@ public class SettingsController {
         autosaveSlider.setValue(GameSettings.getAutosaveIntervalSeconds());
         volumeSlider.setValue(GameSettings.getVolume() * 100.0);
         languageCombo.setValue(GameSettings.getLanguage());
+        applyStaticTexts();
         refreshLabels();
 
         autosaveSlider.valueProperty().addListener((obs, oldVal, newVal) -> refreshLabels());
@@ -50,8 +58,17 @@ public class SettingsController {
     }
 
     private void refreshLabels() {
-        autosaveValueLabel.setText((int) autosaveSlider.getValue() + " sec");
+        autosaveValueLabel.setText((int) autosaveSlider.getValue() + " " + I18n.tr("settings.seconds"));
         volumeValueLabel.setText((int) volumeSlider.getValue() + "%");
+    }
+
+    private void applyStaticTexts() {
+        headerLabel.setText("⚙ " + I18n.tr("settings.header"));
+        autosaveLabel.setText(I18n.tr("settings.autosave"));
+        volumeLabel.setText(I18n.tr("settings.volume"));
+        languageLabel.setText(I18n.tr("settings.language"));
+        cancelBtn.setText(I18n.tr("settings.cancel"));
+        applyBtn.setText(I18n.tr("settings.apply"));
     }
 
     private void close() {

@@ -11,7 +11,7 @@
     <top>
         <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-top">
             <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
-            <Label text="⚙ PARAMETRES" styleClass="settings-title"/>
+            <Label fx:id="headerLabel" text="⚙ PARAMETRES" styleClass="settings-title"/>
         </HBox>
     </top>
     <center>
@@ -19,7 +19,7 @@
             <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
 
             <VBox spacing="6">
-                <Label text="Autosave" styleClass="settings-label"/>
+                <Label fx:id="autosaveLabel" text="Autosave" styleClass="settings-label"/>
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <Slider fx:id="autosaveSlider" min="30" max="600" blockIncrement="10" prefWidth="250"/>
                     <Label fx:id="autosaveValueLabel" styleClass="settings-value"/>
@@ -27,7 +27,7 @@
             </VBox>
 
             <VBox spacing="6">
-                <Label text="Volume" styleClass="settings-label"/>
+                <Label fx:id="volumeLabel" text="Volume" styleClass="settings-label"/>
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <Slider fx:id="volumeSlider" min="0" max="100" blockIncrement="5" prefWidth="250"/>
                     <Label fx:id="volumeValueLabel" styleClass="settings-value"/>
@@ -35,7 +35,7 @@
             </VBox>
 
             <VBox spacing="6">
-                <Label text="Langue" styleClass="settings-label"/>
+                <Label fx:id="languageLabel" text="Langue" styleClass="settings-label"/>
                 <ComboBox fx:id="languageCombo" prefWidth="180"/>
             </VBox>
         </VBox>
@@ -43,8 +43,8 @@
     <bottom>
         <HBox spacing="10" alignment="CENTER_RIGHT" styleClass="settings-footer">
             <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
-            <Button text="Annuler" onAction="#onCancel" styleClass="settings-btn-cancel"/>
-            <Button text="Appliquer" onAction="#onApplySettings" styleClass="settings-btn-apply"/>
+            <Button fx:id="cancelBtn" text="Annuler" onAction="#onCancel" styleClass="settings-btn-cancel"/>
+            <Button fx:id="applyBtn" text="Appliquer" onAction="#onApplySettings" styleClass="settings-btn-apply"/>
         </HBox>
     </bottom>
 </BorderPane>

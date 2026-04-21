@@ -15,7 +15,7 @@
             <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
             <Label text="⚙️ PANNEAU ADMINISTRATEUR" styleClass="admin-title"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="✖ Fermer" onAction="#onClose" styleClass="admin-close-btn"/>
+            <Button fx:id="closeBtn" text="✖ Fermer" onAction="#onClose" styleClass="admin-close-btn"/>
         </HBox>
     </top>
 

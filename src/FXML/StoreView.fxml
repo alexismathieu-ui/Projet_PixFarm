@@ -15,10 +15,10 @@
         <VBox styleClass="store-topbar" spacing="6">
             <padding><Insets top="14" right="24" bottom="14" left="24"/></padding>
             <HBox alignment="CENTER_LEFT" spacing="16">
-                <Label text="🛒 MAGASIN DE LA FERME" styleClass="store-title"/>
+                <Label fx:id="storeTitleLabel" text="🛒 MAGASIN DE LA FERME" styleClass="store-title"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Label fx:id="moneyLabel" text="Argent : 0 $" styleClass="store-money"/>
-                <Button text="✖ Fermer" onAction="#closeStore" styleClass="store-close-btn"/>
+                <Button fx:id="closeBtn" text="✖ Fermer" onAction="#closeStore" styleClass="store-close-btn"/>
             </HBox>
         </VBox>
     </top>
@@ -28,7 +28,7 @@
         <TabPane styleClass="store-tabpane" tabClosingPolicy="UNAVAILABLE">
 
             <!-- ── ONGLET ACHETER ── -->
-            <Tab text="🌱  ACHETER GRAINES" styleClass="store-tab">
+            <Tab fx:id="buyTab" text="🌱  ACHETER GRAINES" styleClass="store-tab">
                 <ScrollPane fitToWidth="true" styleClass="store-scroll">
                     <VBox spacing="10">
                         <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
@@ -166,19 +166,20 @@
             </Tab>
 
             <!-- ── ONGLET VENDRE ── -->
-            <Tab text="💰  VENDRE RÉCOLTES" styleClass="store-tab">
+            <Tab fx:id="sellTab" text="💰  VENDRE RÉCOLTES" styleClass="store-tab">
                 <VBox spacing="20" alignment="CENTER">
                     <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
 
-                    <Label text="Vendez toutes vos récoltes et produits animaux au prix du marché actuel."
+                    <Label fx:id="sellHintLabel" text="Vendez toutes vos récoltes et produits animaux au prix du marché actuel."
                            styleClass="store-sell-hint" wrapText="true"/>
 
                     <VBox styleClass="store-market-box" spacing="10">
-                        <Label text="📈 PRIX DU MARCHÉ (dynamique)" styleClass="store-market-title"/>
-                        <Label text="Les prix baissent si vous vendez trop souvent le même produit !" styleClass="store-market-sub"/>
+                        <Label fx:id="marketTitleLabel" text="📈 PRIX DU MARCHÉ (dynamique)" styleClass="store-market-title"/>
+                        <Label fx:id="marketSubLabel" text="Les prix baissent si vous vendez trop souvent le même produit !" styleClass="store-market-sub"/>
+                        <Label fx:id="restockTimerLabel" text="Restock : 0:00" styleClass="store-market-sub"/>
                     </VBox>
 
-                    <Button text="💰 TOUT VENDRE" onAction="#sellingCrops"
+                    <Button fx:id="sellAllBtn" text="💰 TOUT VENDRE" onAction="#sellingCrops"
                             styleClass="store-sell-all-btn" prefWidth="280" prefHeight="60"/>
 
                     <Label fx:id="sellFeedbackLabel" text="" styleClass="store-sell-feedback" wrapText="true"/>

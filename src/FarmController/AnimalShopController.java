@@ -4,6 +4,7 @@ import Farm.Animal.*;
 import Farm.Animals;
 import Farm.Farms;
 import FarmEngine.GameBalance;
+import FarmEngine.I18n;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,20 +35,20 @@ public class AnimalShopController {
             boolean isLocked = farms.getLevel() < requiredLevel;
             btn.setDisable(isLocked);
             if (isLocked) {
-                btn.setText("🔒 Niv. " + requiredLevel);
+                btn.setText("🔒 " + I18n.tr("animalShop.locked", requiredLevel));
             } else {
-                btn.setText(label + " — " + (int) price + " $");
+                btn.setText(label + " — " + I18n.tr("animalShop.price", (int) price));
             }
         }
     }
 
     private void updateUI() {
-        moneyLabel.setText("Argent : " + (int)farms.getMoney() + " $");
+        moneyLabel.setText(I18n.tr("animalShop.money", (int)farms.getMoney()));
 
-        updateButtonState(Chicken_Btn, GameBalance.getAnimalUnlockLevel("Chicken"), "🐔  Poulet", new Chicken().getBuyPrice());
-        updateButtonState(Sheep_Btn, GameBalance.getAnimalUnlockLevel("Sheep"), "🐑  Mouton", new Sheep().getBuyPrice());
-        updateButtonState(Cow_Btn, GameBalance.getAnimalUnlockLevel("Cow"), "🐄  Vache", new Cow().getBuyPrice());
-        updateButtonState(Pig_Btn, GameBalance.getAnimalUnlockLevel("Pig"), "🐷  Cochon", new Pig().getBuyPrice());
+        updateButtonState(Chicken_Btn, GameBalance.getAnimalUnlockLevel("Chicken"), "🐔  " + I18n.tr("animalShop.animal.chicken"), new Chicken().getBuyPrice());
+        updateButtonState(Sheep_Btn, GameBalance.getAnimalUnlockLevel("Sheep"), "🐑  " + I18n.tr("animalShop.animal.sheep"), new Sheep().getBuyPrice());
+        updateButtonState(Cow_Btn, GameBalance.getAnimalUnlockLevel("Cow"), "🐄  " + I18n.tr("animalShop.animal.cow"), new Cow().getBuyPrice());
+        updateButtonState(Pig_Btn, GameBalance.getAnimalUnlockLevel("Pig"), "🐷  " + I18n.tr("animalShop.animal.pig"), new Pig().getBuyPrice());
     }
 
     private void setFeedback(String msg) {
@@ -67,7 +68,7 @@ public class AnimalShopController {
         int requiredLevel = GameBalance.getAnimalUnlockLevel(a.getSpecies());
 
         if (farms.getLevel() < requiredLevel) {
-            setFeedback("🔒 Niveau " + requiredLevel + " requis !");
+            setFeedback("🔒 " + I18n.tr("animalShop.feedback.levelRequired", requiredLevel));
             return;
         }
 
@@ -76,10 +77,20 @@ public class AnimalShopController {
             farms.addAnimals(a);
             updateUI();
             if (onUpdateCallback != null) onUpdateCallback.run();
-            setFeedback("✅ " + a.getSpecies() + " acheté ! Placez-le dans un enclos.");
+            setFeedback(I18n.tr("animalShop.feedback.bought", getSpeciesName(a.getSpecies())));
         }
         else {
-            setFeedback("❌ Pas assez d'argent ! (" + (int)a.getBuyPrice() + " $ requis)");
+            setFeedback(I18n.tr("animalShop.feedback.notEnoughMoney", (int)a.getBuyPrice()));
         }
+    }
+
+    private String getSpeciesName(String species) {
+        return switch (species) {
+            case "Chicken" -> I18n.tr("animalShop.animal.chicken");
+            case "Sheep" -> I18n.tr("animalShop.animal.sheep");
+            case "Cow" -> I18n.tr("animalShop.animal.cow");
+            case "Pig" -> I18n.tr("animalShop.animal.pig");
+            default -> species;
+        };
     }
 }
