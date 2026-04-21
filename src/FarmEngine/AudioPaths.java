@@ -5,7 +5,7 @@ public final class  AudioPaths {
 
     public static final String MUSIC_MENU = "/Audio/menu.mp3";
     public static final String MUSIC_GAME = "/Audio/game.mp3";
-    public static final String MUSIC_RANCH = "/Audio/game.mp3";
+    public static final String MUSIC_RANCH = "/Audio/ranch.mp3";
 
     public static final String SFX_CLICK = "/Audio/click.wav";
     public static final String SFX_OPEN = "/Audio/open.wav";

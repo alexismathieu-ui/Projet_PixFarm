@@ -46,6 +46,29 @@
 5. **Build → Rebuild Project** pour copier les assets
 6. Lancer `FarmView.MainApp`
 
+### Build Windows (.exe portable)
+
+Si tu veux lancer le jeu comme une app Windows sans ouvrir IntelliJ:
+
+1. Installer un **JDK 17+** (avec `jpackage` et `jlink`)
+2. Télécharger JavaFX SDK et definir la variable `JAVAFX_SDK`  
+   Exemple:
+   ```bat
+   setx JAVAFX_SDK "C:\javafx-sdk-21.0.7"
+   ```
+3. Depuis la racine du projet, lancer:
+   ```bat
+   scripts\build-portable-exe.bat
+   ```
+4. L'executable est genere ici:
+   ```text
+   dist\PixFarm\PixFarm.exe
+   ```
+5. (Optionnel) Creer un raccourci Bureau:
+   ```bat
+   scripts\create-desktop-shortcut.bat
+   ```
+
 ---
 
 ## 🎮 Gameplay

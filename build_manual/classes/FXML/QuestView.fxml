@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox styleClass="quest-root" prefWidth="500" prefHeight="600"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="FarmController.QuestController"
+      stylesheets="@../FarmView/quest.css">
+
+    <HBox styleClass="quest-header" alignment="CENTER_LEFT" spacing="12">
+        <Label text="📋" style="-fx-font-size:28px;"/>
+        <VBox spacing="2">
+            <Label fx:id="headerTitleLabel" text="TABLEAU DES QUÊTES" styleClass="quest-title"/>
+            <Label fx:id="headerSubtitleLabel" text="Livrez vos récoltes pour gagner des récompenses !" styleClass="quest-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <HBox styleClass="quest-timer" alignment="CENTER" spacing="8">
+        <Label text="⏳" style="-fx-font-size:16px;"/>
+        <Label fx:id="timerLabel" text="Chargement..." styleClass="timer-label"/>
+    </HBox>
+
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <Tab text="Narratif">
+            <ScrollPane styleClass="quest-scroll" fitToWidth="true">
+                <VBox fx:id="narrativeContainer" styleClass="quest-list"/>
+            </ScrollPane>
+        </Tab>
+        <Tab text="Guilde hebdo">
+            <ScrollPane styleClass="quest-scroll" fitToWidth="true">
+                <VBox fx:id="guildContainer" styleClass="quest-list"/>
+            </ScrollPane>
+        </Tab>
+        <Tab text="Talents">
+            <VBox spacing="10" styleClass="quest-list">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <Label fx:id="talentPointsLabel" text="Points: 0"/>
+                <VBox fx:id="talentContainer" spacing="8"/>
+            </VBox>
+        </Tab>
+    </TabPane>
+
+    <HBox styleClass="quest-footer" alignment="CENTER">
+        <Button fx:id="closeBtn" text="✖  FERMER" onAction="#close" styleClass="btn-close"/>
+    </HBox>
+
+</VBox>

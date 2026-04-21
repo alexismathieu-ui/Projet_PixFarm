@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="adminRoot"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="FarmController.AdminController"
+            styleClass="admin-root"
+            prefWidth="620" prefHeight="560"
+            stylesheets="@../FarmView/admin.css">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="14" styleClass="admin-topbar">
+            <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
+            <Label text="⚙️ PANNEAU ADMINISTRATEUR" styleClass="admin-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="closeBtn" text="✖ Fermer" onAction="#onClose" styleClass="admin-close-btn"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="admin-scroll">
+            <VBox spacing="18">
+                <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+
+                <VBox spacing="10" styleClass="admin-section">
+                    <Label text="💰 ARGENT" styleClass="admin-section-title"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="moneyField" promptText="Montant à ajouter..." styleClass="admin-field" prefWidth="200"/>
+                        <Button text="➕ Ajouter" onAction="#onAddMoney" styleClass="admin-btn-gold"/>
+                        <Button text="Max (999 M)" onAction="#onMaxMoney" styleClass="admin-btn-green"/>
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="10" styleClass="admin-section">
+                    <Label text="⭐ XP / NIVEAU" styleClass="admin-section-title"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="xpField" promptText="XP à ajouter..." styleClass="admin-field" prefWidth="200"/>
+                        <Button text="➕ Ajouter XP" onAction="#onAddXP" styleClass="admin-btn-gold"/>
+                        <Button text="Level MAX (99)" onAction="#onMaxLevel" styleClass="admin-btn-green"/>
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="10" styleClass="admin-section">
+                    <Label text="🌱 GRAINES (×10 de chaque)" styleClass="admin-section-title"/>
+                    <FlowPane hgap="10" vgap="8" alignment="CENTER_LEFT">
+                        <Button text="Blé"          onAction="#onGiveWheat"       styleClass="admin-btn-seed"/>
+                        <Button text="Carotte"      onAction="#onGiveCarrot"      styleClass="admin-btn-seed"/>
+                        <Button text="Patate"       onAction="#onGivePotato"      styleClass="admin-btn-seed"/>
+                        <Button text="Tomate"       onAction="#onGiveTomato"      styleClass="admin-btn-seed"/>
+                        <Button text="Citron"       onAction="#onGiveLemon"       styleClass="admin-btn-seed"/>
+                        <Button text="Fraise"       onAction="#onGiveStrawberry"  styleClass="admin-btn-seed"/>
+                        <Button text="Maïs"         onAction="#onGiveCorn"        styleClass="admin-btn-seed"/>
+                        <Button text="Ananas"       onAction="#onGivePineapple"   styleClass="admin-btn-seed"/>
+                        <Button text="Tout x50"     onAction="#onGiveAllSeeds"    styleClass="admin-btn-green"/>
+                    </FlowPane>
+                </VBox>
+
+                <VBox spacing="10" styleClass="admin-section">
+                    <Label text="🐾 PRODUITS ANIMAUX (×5)" styleClass="admin-section-title"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="🥚 Oeufs"   onAction="#onGiveEggs"  styleClass="admin-btn-seed"/>
+                        <Button text="🥛 Lait"    onAction="#onGiveMilk"  styleClass="admin-btn-seed"/>
+                        <Button text="🧶 Laine"   onAction="#onGiveWool"  styleClass="admin-btn-seed"/>
+                        <Button text="🍄 Truffes" onAction="#onGiveTruff" styleClass="admin-btn-seed"/>
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="10" styleClass="admin-section">
+                    <Label text="🌤️ MÉTÉO FORCÉE" styleClass="admin-section-title"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="☀️ Soleil"      onAction="#onWeatherSun"   styleClass="admin-btn-weather"/>
+                        <Button text="🌧️ Pluie"       onAction="#onWeatherRain"  styleClass="admin-btn-weather"/>
+                        <Button text="⚡ Orage"        onAction="#onWeatherStorm" styleClass="admin-btn-weather"/>
+                        <Button text="🔥 Sécheresse"  onAction="#onWeatherDrought" styleClass="admin-btn-weather"/>
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="10" styleClass="admin-section-danger">
+                    <Label text="⚠️ DANGER ZONE" styleClass="admin-section-title-danger"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="🗑️ Vider inventaire" onAction="#onClearInventory" styleClass="admin-btn-danger"/>
+                        <Button text="💀 Reset complet"    onAction="#onResetGame"      styleClass="admin-btn-danger"/>
+                    </HBox>
+                </VBox>
+
+                <Label fx:id="feedbackLabel" text="" styleClass="admin-feedback" wrapText="true"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

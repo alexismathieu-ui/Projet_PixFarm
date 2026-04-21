@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="barnRoot"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="FarmController.BarnController"
+            styleClass="barn-root"
+            prefWidth="1000" prefHeight="680"
+            stylesheets="@../FarmView/barn.css">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="18" styleClass="barn-topbar">
+            <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+            <Label text="🏚️ LA GRANGE" styleClass="barn-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox alignment="CENTER" spacing="3" styleClass="level-block">
+                <Label fx:id="levelLabel" text="Niveau 1" styleClass="level-label"/>
+                <ProgressBar fx:id="xpBar" progress="0.0" styleClass="xp-bar" prefWidth="180"/>
+                <Label fx:id="xpLabel" text="0 / 100 XP" styleClass="xp-label"/>
+            </VBox>
+            <Button text="⬅ Retour" onAction="#goToFarm" styleClass="back-btn"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="14" styleClass="barn-sidebar">
+            <padding><Insets top="20" right="14" bottom="20" left="14"/></padding>
+            <Label text="📊 STATISTIQUES" styleClass="sidebar-title"/>
+            <Separator styleClass="barn-sep"/>
+            <VBox spacing="6" styleClass="stat-box">
+                <Label fx:id="animalCountLabel"    text="🐾 Animaux : 0"   styleClass="stat-label"/>
+                <Label fx:id="readyCountLabel"     text="✅ Prêts : 0"      styleClass="stat-label-green"/>
+                <Label fx:id="hungryCountLabel"    text="🍽️ Affamés : 0"  styleClass="stat-label-red"/>
+                <Label fx:id="enclosureCountLabel" text="🏠 Enclos : 0/6"  styleClass="stat-label"/>
+            </VBox>
+            <Separator styleClass="barn-sep"/>
+            <Label text="⚡ ACTIONS" styleClass="sidebar-title"/>
+            <Button text="➕ Nouvel Enclos"    onAction="#onAddEnclosure"   maxWidth="Infinity" styleClass="action-btn-green"/>
+            <Button text="🛒 Boutique Animaux" onAction="#onOpenAnimalShop" maxWidth="Infinity" styleClass="action-btn-brown"/>
+            <Button text="🎒 Inventaire"       onAction="#onOpenInventory"  maxWidth="Infinity" styleClass="action-btn-blue"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Label fx:id="labelStatus" text="Bienvenue !" styleClass="status-label" wrapText="true"/>
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="barn-scroll">
+            <VBox spacing="0">
+                <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+                <Label text="MES ENCLOS" styleClass="section-title"/>
+                <GridPane fx:id="enclosureGrid" hgap="16" vgap="16" alignment="TOP_LEFT">
+                    <padding><Insets top="14" bottom="14"/></padding>
+                </GridPane>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" styleClass="barn-bottombar">
+            <padding><Insets top="8" right="20" bottom="8" left="20"/></padding>
+            <Label fx:id="bottomStatus" text="" styleClass="bottom-status"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

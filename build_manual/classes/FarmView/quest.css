@@ -1,0 +1,233 @@
+.root {
+    -fx-font-family: "Courier New", monospace;
+}
+
+/* --- Fond global --- */
+.quest-root {
+    -fx-background-color: #2b1c10;
+    -fx-border-color: #d6ae6e;
+    -fx-border-width: 4;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 20, 0, 0, 6);
+}
+
+.quest-header {
+    -fx-background-color: #4b3118;
+    -fx-border-color: #d6ae6e;
+    -fx-border-width: 0 0 3 0;
+    -fx-padding: 14 20 14 20;
+}
+
+.quest-title {
+    -fx-text-fill: #ffe2a0;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 3, 0, 1, 2);
+}
+
+.quest-subtitle {
+    -fx-text-fill: #d5be93;
+    -fx-font-size: 11px;
+    -fx-font-family: "Courier New", monospace;
+}
+
+.quest-timer {
+    -fx-background-color: rgba(0,0,0,0.35);
+    -fx-border-color: #c19555;
+    -fx-border-width: 2;
+    -fx-padding: 6 16 6 16;
+}
+
+.timer-label {
+    -fx-text-fill: #ffd18a;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+}
+
+.timer-label-ok {
+    -fx-text-fill: #b8f190;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+}
+
+.quest-scroll {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.quest-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.quest-scroll .scroll-bar {
+    -fx-background-color: #2b1c10;
+}
+
+.quest-scroll .scroll-bar .thumb {
+    -fx-background-color: #c19555;
+    -fx-background-radius: 0;
+}
+
+.quest-list {
+    -fx-background-color: transparent;
+    -fx-padding: 10 14 10 14;
+    -fx-spacing: 10;
+}
+
+.quest-card {
+    -fx-background-color: #f5e6c4;
+    -fx-border-color: #8d6841;
+    -fx-border-width: 2;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0, 2, 3);
+}
+
+.quest-card-header {
+    -fx-background-color: #6a4c2a;
+    -fx-padding: 5 10 5 10;
+}
+
+.quest-card-title {
+    -fx-text-fill: #fff2d0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+}
+
+.quest-card-body {
+    -fx-background-color: #f5e6c4;
+    -fx-padding: 10 12 10 12;
+    -fx-spacing: 8;
+}
+
+.quest-item-box {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 8;
+}
+
+.quest-item-name {
+    -fx-text-fill: #3b2510;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+}
+
+.quest-amount {
+    -fx-background-color: #6a4c2a;
+    -fx-text-fill: #ffe2a0;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+    -fx-padding: 2 8 2 8;
+}
+
+.quest-rewards-box {
+    -fx-background-color: rgba(106,76,42,0.16);
+    -fx-border-color: #cdae80;
+    -fx-border-width: 1;
+    -fx-padding: 5 10 5 10;
+    -fx-spacing: 12;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.reward-money {
+    -fx-text-fill: #6a4c2a;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+}
+
+.reward-xp {
+    -fx-text-fill: #416f8f;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+}
+
+.btn-deliver {
+    -fx-background-color: #628246;
+    -fx-text-fill: #eff7e2;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+    -fx-padding: 6 16 6 16;
+    -fx-cursor: hand;
+    -fx-border-color: #496235;
+    -fx-border-width: 0 0 3 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.btn-deliver:hover {
+    -fx-background-color: #759d54;
+    -fx-border-color: #5f7f45;
+}
+
+.btn-deliver:pressed {
+    -fx-translate-y: 2;
+    -fx-border-width: 0 0 1 0;
+}
+
+.btn-refuse {
+    -fx-background-color: #8a3a33;
+    -fx-text-fill: #ffe1db;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+    -fx-padding: 6 12 6 12;
+    -fx-cursor: hand;
+    -fx-border-color: #6d2d28;
+    -fx-border-width: 0 0 3 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.btn-refuse:hover {
+    -fx-background-color: #a74a41;
+}
+
+.btn-refuse:pressed {
+    -fx-translate-y: 2;
+    -fx-border-width: 0 0 1 0;
+}
+
+.quest-empty-label {
+    -fx-text-fill: #d6be92;
+    -fx-font-size: 14px;
+    -fx-font-family: "Courier New", monospace;
+    -fx-padding: 20;
+    -fx-alignment: CENTER;
+}
+
+.btn-close {
+    -fx-background-color: #6a4c2a;
+    -fx-text-fill: #ffe2a0;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+    -fx-padding: 8 30 8 30;
+    -fx-cursor: hand;
+    -fx-border-color: #d6ae6e;
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.btn-close:hover {
+    -fx-background-color: #85603a;
+    -fx-text-fill: #fff1c8;
+}
+
+.btn-close:pressed {
+    -fx-translate-y: 1;
+}
+
+.quest-footer {
+    -fx-background-color: #4b3118;
+    -fx-border-color: #d6ae6e;
+    -fx-border-width: 3 0 0 0;
+    -fx-padding: 12 20 12 20;
+}

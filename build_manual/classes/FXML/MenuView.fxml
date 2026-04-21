@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="FarmController.MenuController"
+           prefWidth="900" prefHeight="650"
+           stylesheets="@../FarmView/menu.css">
+
+    <ImageView fitWidth="900" fitHeight="650" preserveRatio="false">
+        <image>
+            <Image url="@../Sprite/images/Fonds + Graphics/Menu Fond.gif" />
+        </image>
+    </ImageView>
+
+    <Region style="-fx-background-color: rgba(0,0,0,0.25);" />
+
+    <VBox alignment="CENTER" spacing="28">
+
+        <ImageView fitWidth="420" preserveRatio="true" smooth="true">
+            <image>
+                <Image url="@../Sprite/images/Fonds + Graphics/MenuLogo.png" />
+            </image>
+            <effect>
+                <DropShadow color="#000000" radius="12" offsetX="4" offsetY="4"/>
+            </effect>
+        </ImageView>
+
+        <VBox fx:id="menuPane" alignment="CENTER" spacing="20" styleClass="menu-panel">
+            <Button fx:id="playBtn" text="🌱  Commencer Partie" onAction="#onPlayClicked" styleClass="menu-btn" />
+            <Button fx:id="continueBtn" text="▶  Continuer" onAction="#onContinueClicked" styleClass="menu-btn" />
+            <Label fx:id="lastSaveLabel" text="Derniere partie : aucune" style="-fx-text-fill:#ffe1a0; -fx-font-family:'Courier New'; -fx-font-size:12px;"/>
+            <Button fx:id="quitBtn" text="✖   Quitter"          onAction="#handleQuit"     styleClass="menu-btn-quit" />
+        </VBox>
+
+    </VBox>
+
+</StackPane>

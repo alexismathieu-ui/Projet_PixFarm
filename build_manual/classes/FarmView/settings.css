@@ -1,0 +1,57 @@
+.settings-root {
+    -fx-font-family: "Courier New", monospace;
+    -fx-background-color: #24180d;
+}
+
+.settings-top {
+    -fx-background-color: linear-gradient(to bottom, #4b3118, #352210);
+    -fx-border-color: #cda867;
+    -fx-border-width: 0 0 3 0;
+}
+
+.settings-title {
+    -fx-text-fill: #ffe1a0;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.settings-body {
+    -fx-background-color: rgba(255,242,220,0.06);
+}
+
+.settings-label {
+    -fx-text-fill: #ffe1a0;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.settings-value {
+    -fx-text-fill: #f0dfbf;
+    -fx-font-size: 12px;
+}
+
+.settings-footer {
+    -fx-background-color: #352210;
+    -fx-border-color: #cda867;
+    -fx-border-width: 3 0 0 0;
+}
+
+.settings-btn-apply {
+    -fx-background-color: #4f6935, #3b4f28;
+    -fx-border-color: #c5e2a5;
+    -fx-border-width: 2;
+    -fx-text-fill: #f0f8e3;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.settings-btn-cancel {
+    -fx-background-color: #87653b, #6e512d;
+    -fx-border-color: #f0cf8b;
+    -fx-border-width: 2;
+    -fx-text-fill: #fff1d1;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}

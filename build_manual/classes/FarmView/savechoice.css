@@ -1,0 +1,114 @@
+.root {
+    -fx-font-family: "Courier New", monospace;
+}
+
+.save-root {
+    -fx-background-color: rgba(24, 16, 10, 0.95);
+    -fx-border-color: #f2cf84;
+    -fx-border-width: 4px;
+}
+
+.save-title {
+    -fx-text-fill: #ffe2a0;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New", monospace;
+}
+
+.slot-btn {
+    -fx-background-color: #35552c, #2a4222, #1f3219;
+    -fx-background-insets: 0, 3 3 0 0, 4 4 0 0;
+    -fx-background-radius: 0;
+    -fx-border-color: #d6c18c;
+    -fx-border-width: 2px;
+    -fx-border-radius: 0;
+    -fx-text-fill: #eef4df;
+    -fx-font-size: 12px;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-weight: bold;
+    -fx-pref-width: 356px;
+    -fx-pref-height: 72px;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 12 10 12;
+}
+
+.slot-btn:hover {
+    -fx-background-color: #4d7840, #35552c, #2a4222;
+    -fx-border-color: #ffe2a0;
+    -fx-text-fill: #ffffff;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.slot-btn:pressed {
+    -fx-background-color: #1f3219, #2a4222, #35552c;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+    -fx-translate-y: 2px;
+}
+
+.delete-btn {
+    -fx-background-color: #7a2e2a, #5d211f, #471715;
+    -fx-background-insets: 0, 2 2 0 0, 3 3 0 0;
+    -fx-background-radius: 0;
+    -fx-border-color: #f0ad9e;
+    -fx-border-width: 2px;
+    -fx-text-fill: #ffd7cf;
+    -fx-font-size: 16px;
+    -fx-pref-width: 46px;
+    -fx-pref-height: 72px;
+    -fx-cursor: hand;
+}
+
+.delete-btn:hover {
+    -fx-background-color: #a63e39, #7a2e2a, #5d211f;
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+}
+
+.delete-btn:pressed {
+    -fx-scale-x: 0.94;
+    -fx-scale-y: 0.94;
+    -fx-translate-y: 2;
+}
+
+.cancel-btn {
+    -fx-background-color: #65461f, #4a3216, #36230f;
+    -fx-background-insets: 0, 3 3 0 0, 4 4 0 0;
+    -fx-background-radius: 0;
+    -fx-border-color: #f2cf84;
+    -fx-border-width: 2px;
+    -fx-text-fill: #ffeec8;
+    -fx-font-size: 13px;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-weight: bold;
+    -fx-pref-width: 160px;
+    -fx-pref-height: 40px;
+    -fx-cursor: hand;
+}
+
+.cancel-btn:hover {
+    -fx-background-color: #83602f, #65461f, #4a3216;
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+}
+
+.cancel-btn:pressed {
+    -fx-background-color: #500e0e, #6e1515, #8f1f1f;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-translate-y: 2px;
+}
+
+.save-panel {
+    -fx-background-color: rgba(20, 12, 8, 0.92);
+    -fx-border-color: #b28a4e;
+    -fx-border-width: 2px;
+    -fx-padding: 10 16 10 16;
+}
+
+.save-separator {
+    -fx-background-color: #b28a4e;
+    -fx-pref-height: 2px;
+}

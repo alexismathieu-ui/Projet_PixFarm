@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="FarmController.StoreController"
+            styleClass="store-root"
+            prefWidth="640" prefHeight="700"
+            stylesheets="@../FarmView/store.css">
+
+    <!-- TOP -->
+    <top>
+        <VBox styleClass="store-topbar" spacing="6">
+            <padding><Insets top="14" right="24" bottom="14" left="24"/></padding>
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <Label fx:id="storeTitleLabel" text="🛒 MAGASIN DE LA FERME" styleClass="store-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="moneyLabel" text="Argent : 0 $" styleClass="store-money"/>
+                <Button fx:id="closeBtn" text="✖ Fermer" onAction="#closeStore" styleClass="store-close-btn"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- CENTER : onglets Acheter / Vendre -->
+    <center>
+        <TabPane styleClass="store-tabpane" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- ── ONGLET ACHETER ── -->
+            <Tab fx:id="buyTab" text="🌱  ACHETER GRAINES" styleClass="store-tab">
+                <ScrollPane fitToWidth="true" styleClass="store-scroll">
+                    <VBox spacing="10">
+                        <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+                        <!-- Blé -->
+                        <HBox styleClass="store-row" spacing="14" alignment="CENTER_LEFT">
+                            <ImageView fitWidth="40" fitHeight="40" preserveRatio="true">
+                                <image><Image url="@../Sprite/images/Icons/BléIC.png"/></image>
+                            </ImageView>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="🌾  Blé" styleClass="store-item-name"/>
+                                <Label text="Graines de base — rapide à pousser" styleClass="store-item-desc"/>
+                                <Label fx:id="wheatSellLabel" styleClass="store-sell-label"/>
+                            </VBox>
+                            <VBox alignment="CENTER_RIGHT" spacing="4" minWidth="140">
+                                <Label text="5 $" styleClass="store-buy-price"/>
+                                <Button text="Acheter" fx:id="Wheat_Seed" onAction="#buySeeds" styleClass="store-buy-btn"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Carotte -->
+                        <HBox styleClass="store-row" spacing="14" alignment="CENTER_LEFT">
+                            <ImageView fitWidth="40" fitHeight="40" preserveRatio="true">
+                                <image><Image url="@../Sprite/images/Icons/CarotteIC.png"/></image>
+                            </ImageView>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="🥕  Carotte" styleClass="store-item-name"/>
+                                <Label text="Niveau 2 requis" styleClass="store-item-desc"/>
+                                <Label fx:id="carrotSellLabel" styleClass="store-sell-label"/>
+                            </VBox>
+                            <VBox alignment="CENTER_RIGHT" spacing="4" minWidth="140">
+                                <Label text="180 $" styleClass="store-buy-price"/>
+                                <Button text="Acheter" fx:id="Carrot_Seed" onAction="#buySeeds" styleClass="store-buy-btn"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Patate -->
+                        <HBox styleClass="store-row" spacing="14" alignment="CENTER_LEFT">
+                            <ImageView fitWidth="40" fitHeight="40" preserveRatio="true">
+                                <image><Image url="@../Sprite/images/Icons/PatateIC.png"/></image>
+                            </ImageView>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="🥔  Patate" styleClass="store-item-name"/>
+                                <Label text="Niveau 3 requis" styleClass="store-item-desc"/>
+                                <Label fx:id="potatoSellLabel" styleClass="store-sell-label"/>
+                            </VBox>
+                            <VBox alignment="CENTER_RIGHT" spacing="4" minWidth="140">
+                                <Label text="850 $" styleClass="store-buy-price"/>
+                                <Button text="Acheter" fx:id="Potato_Seed" onAction="#buySeeds" styleClass="store-buy-btn"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Tomate -->
+                        <HBox styleClass="store-row" spacing="14" alignment="CENTER_LEFT">
+                            <ImageView fitWidth="40" fitHeight="40" preserveRatio="true">
+                                <image><Image url="@../Sprite/images/Icons/TomateIC.png"/></image>
+                            </ImageView>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="🍅  Tomate" styleClass="store-item-name"/>
+                                <Label text="Niveau 5 requis" styleClass="store-item-desc"/>
+                                <Label fx:id="tomatoSellLabel" styleClass="store-sell-label"/>
+                            </VBox>
+                            <VBox alignment="CENTER_RIGHT" spacing="4" minWidth="140">
+                                <Label text="3 500 $" styleClass="store-buy-price"/>
+                                <Button text="Acheter" fx:id="Tomato_Seed" onAction="#buySeeds" styleClass="store-buy-btn"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Citron -->
+                        <HBox styleClass="store-row" spacing="14" alignment="CENTER_LEFT">
+                            <ImageView fitWidth="40" fitHeight="40" preserveRatio="true">
+                                <image><Image url="@../Sprite/images/Icons/CitronIC.png"/></image>
+                            </ImageView>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="🍋  Citron" styleClass="store-item-name"/>
+                                <Label text="Niveau 6 requis" styleClass="store-item-desc"/>
+                                <Label fx:id="lemonSellLabel" styleClass="store-sell-label"/>
+                            </VBox>
+                            <VBox alignment="CENTER_RIGHT" spacing="4" minWidth="140">
+                                <Label text="15 000 $" styleClass="store-buy-price"/>
+                                <Button text="Acheter" fx:id="Lemon_Seed" onAction="#buySeeds" styleClass="store-buy-btn"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Fraise -->
+                        <HBox styleClass="store-row" spacing="14" alignment="CENTER_LEFT">
+                            <ImageView fitWidth="40" fitHeight="40" preserveRatio="true">
+                                <image><Image url="@../Sprite/images/Icons/FraiseIC.png"/></image>
+                            </ImageView>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="🍓  Fraise" styleClass="store-item-name"/>
+                                <Label text="Niveau 7 requis" styleClass="store-item-desc"/>
+                                <Label fx:id="strawberrySellLabel" styleClass="store-sell-label"/>
+                            </VBox>
+                            <VBox alignment="CENTER_RIGHT" spacing="4" minWidth="140">
+                                <Label text="60 000 $" styleClass="store-buy-price"/>
+                                <Button text="Acheter" fx:id="Strawberry_Seed" onAction="#buySeeds" styleClass="store-buy-btn"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Maïs -->
+                        <HBox styleClass="store-row" spacing="14" alignment="CENTER_LEFT">
+                            <ImageView fitWidth="40" fitHeight="40" preserveRatio="true">
+                                <image><Image url="@../Sprite/images/Icons/MaisIC.png"/></image>
+                            </ImageView>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="🌽  Maïs" styleClass="store-item-name"/>
+                                <Label text="Niveau 10 requis" styleClass="store-item-desc"/>
+                                <Label fx:id="cornSellLabel" styleClass="store-sell-label"/>
+                            </VBox>
+                            <VBox alignment="CENTER_RIGHT" spacing="4" minWidth="140">
+                                <Label text="250 000 $" styleClass="store-buy-price"/>
+                                <Button text="Acheter" fx:id="Corn_Seed" onAction="#buySeeds" styleClass="store-buy-btn"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Ananas -->
+                        <HBox styleClass="store-row" spacing="14" alignment="CENTER_LEFT">
+                            <ImageView fitWidth="40" fitHeight="40" preserveRatio="true">
+                                <image><Image url="@../Sprite/images/Icons/ananasIC.png"/></image>
+                            </ImageView>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="🍍  Ananas" styleClass="store-item-name"/>
+                                <Label text="Niveau 15 requis" styleClass="store-item-desc"/>
+                                <Label fx:id="pineappleSellLabel" styleClass="store-sell-label"/>
+                            </VBox>
+                            <VBox alignment="CENTER_RIGHT" spacing="4" minWidth="140">
+                                <Label text="950 000 $" styleClass="store-buy-price"/>
+                                <Button text="Acheter" fx:id="Pineapple_Seed" onAction="#buySeeds" styleClass="store-buy-btn"/>
+                            </VBox>
+                        </HBox>
+
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- ── ONGLET VENDRE ── -->
+            <Tab fx:id="sellTab" text="💰  VENDRE RÉCOLTES" styleClass="store-tab">
+                <VBox spacing="20" alignment="CENTER">
+                    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+                    <Label fx:id="sellHintLabel" text="Vendez toutes vos récoltes et produits animaux au prix du marché actuel."
+                           styleClass="store-sell-hint" wrapText="true"/>
+
+                    <VBox styleClass="store-market-box" spacing="10">
+                        <Label fx:id="marketTitleLabel" text="📈 PRIX DU MARCHÉ (dynamique)" styleClass="store-market-title"/>
+                        <Label fx:id="marketSubLabel" text="Les prix baissent si vous vendez trop souvent le même produit !" styleClass="store-market-sub"/>
+                        <Label fx:id="restockTimerLabel" text="Restock : 0:00" styleClass="store-market-sub"/>
+                    </VBox>
+
+                    <Button fx:id="sellAllBtn" text="💰 TOUT VENDRE" onAction="#sellingCrops"
+                            styleClass="store-sell-all-btn" prefWidth="280" prefHeight="60"/>
+
+                    <Label fx:id="sellFeedbackLabel" text="" styleClass="store-sell-feedback" wrapText="true"/>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+</BorderPane>
