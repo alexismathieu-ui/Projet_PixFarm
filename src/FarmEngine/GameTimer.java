@@ -64,6 +64,7 @@ public class GameTimer {
         }
         for (Animals animals : farms.getMyAnimals()){
             animals.update();
+            animals.applyCareBonus(farms.getTalentLivestockMultiplier());
         }
         updateUI.run();
     }

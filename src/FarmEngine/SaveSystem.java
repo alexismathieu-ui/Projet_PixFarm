@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.zip.CRC32;
 
 public class SaveSystem {
-    private static final int SAVE_VERSION = 10;
+    private static final int SAVE_VERSION = 11;
     private static final String VERSION_PREFIX = "SAVE_VERSION=";
     private static final String CHECKSUM_PREFIX = "CHECKSUM=";
     private static final Path SAVE_DIR = Path.of("saves");
@@ -166,6 +166,25 @@ public class SaveSystem {
             lines.add(String.valueOf(farms.getUnlockedAchievements().size()));
             for (String achv : farms.getUnlockedAchievements()) {
                 lines.add(achv);
+            }
+
+            lines.add("META_TALENTS");
+            lines.add(farms.getTalentPoints() + "|" + farms.getNarrativeChapter() + "|" + farms.getGuildWeekIndex() + "|" + farms.getGuildWeekStartDay());
+            lines.add(String.valueOf(farms.getTalentRanks().size()));
+            for (java.util.Map.Entry<String, Integer> e : farms.getTalentRanks().entrySet()) {
+                lines.add(e.getKey() + "|" + e.getValue());
+            }
+
+            lines.add("META_NARRATIVE");
+            lines.add(String.valueOf(farms.getCompletedNarrativeQuests().size()));
+            for (String id : farms.getCompletedNarrativeQuests()) {
+                lines.add(id);
+            }
+
+            lines.add("META_GUILD");
+            lines.add(String.valueOf(farms.getWeeklyGuildQuests().size()));
+            for (Farms.GuildQuest gq : farms.getWeeklyGuildQuests()) {
+                lines.add(gq.id + "|" + gq.targetItem + "|" + gq.amountNeeded + "|" + gq.rewardMoney + "|" + gq.rewardXP + "|" + gq.claimed);
             }
 
             lines.add(CHECKSUM_PREFIX + computeChecksum(lines));
@@ -466,6 +485,49 @@ public class SaveSystem {
                         int count = Integer.parseInt(lines.get(idx++));
                         for (int i = 0; i < count && idx < dataEndExclusive; i++) {
                             farms.getUnlockedAchievements().add(lines.get(idx++));
+                        }
+                    }
+                    continue;
+                }
+                if (line.equals("META_TALENTS") && idx < dataEndExclusive) {
+                    String[] meta = lines.get(idx++).split("\\|");
+                    if (meta.length >= 4) {
+                        farms.setTalentPoints(Integer.parseInt(meta[0]));
+                        farms.setNarrativeChapter(Integer.parseInt(meta[1]));
+                        farms.setGuildWeekIndex(Integer.parseInt(meta[2]));
+                        farms.setGuildWeekStartDay(Integer.parseInt(meta[3]));
+                    }
+                    if (idx < dataEndExclusive) {
+                        int count = Integer.parseInt(lines.get(idx++));
+                        farms.getTalentRanks().clear();
+                        for (int i = 0; i < count && idx < dataEndExclusive; i++) {
+                            String[] t = lines.get(idx++).split("\\|");
+                            if (t.length >= 2) {
+                                farms.getTalentRanks().put(t[0], Integer.parseInt(t[1]));
+                            }
+                        }
+                    }
+                    continue;
+                }
+                if (line.equals("META_NARRATIVE") && idx < dataEndExclusive) {
+                    farms.getCompletedNarrativeQuests().clear();
+                    int count = Integer.parseInt(lines.get(idx++));
+                    for (int i = 0; i < count && idx < dataEndExclusive; i++) {
+                        farms.getCompletedNarrativeQuests().add(lines.get(idx++));
+                    }
+                    continue;
+                }
+                if (line.equals("META_GUILD") && idx < dataEndExclusive) {
+                    farms.getWeeklyGuildQuests().clear();
+                    int count = Integer.parseInt(lines.get(idx++));
+                    for (int i = 0; i < count && idx < dataEndExclusive; i++) {
+                        String[] g = lines.get(idx++).split("\\|");
+                        if (g.length >= 6) {
+                            Farms.GuildQuest quest = new Farms.GuildQuest(
+                                    g[0], g[1], Integer.parseInt(g[2]), Double.parseDouble(g[3]), Integer.parseInt(g[4])
+                            );
+                            quest.claimed = Boolean.parseBoolean(g[5]);
+                            farms.getWeeklyGuildQuests().add(quest);
                         }
                     }
                 }

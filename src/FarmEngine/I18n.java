@@ -218,6 +218,12 @@ public final class I18n {
         FR.put("tooltip.store.close", "Fermer le magasin");
         FR.put("tooltip.store.sellAll", "Vendre en une action");
         FR.put("tooltip.inventory.close", "Fermer l'inventaire");
+        FR.put("talent.points", "Points de talent : %d");
+        FR.put("talent.unlock", "Debloquer");
+        FR.put("talent.farm", "Talents Ferme (+recolte)");
+        FR.put("talent.market", "Talents Marche (+vente)");
+        FR.put("talent.livestock", "Talents Elevage (+sante)");
+        FR.put("quest.claimed", "Reclamee");
 
         EN.put("menu.continue.none", "Last game: none");
         EN.put("menu.continue.last", "Last game: Slot %d - %s");
@@ -429,6 +435,12 @@ public final class I18n {
         EN.put("tooltip.store.close", "Close shop");
         EN.put("tooltip.store.sellAll", "Sell in one click");
         EN.put("tooltip.inventory.close", "Close inventory");
+        EN.put("talent.points", "Talent points: %d");
+        EN.put("talent.unlock", "Unlock");
+        EN.put("talent.farm", "Farm talents (+harvest)");
+        EN.put("talent.market", "Market talents (+sell)");
+        EN.put("talent.livestock", "Livestock talents (+health)");
+        EN.put("quest.claimed", "Claimed");
     }
 
     private I18n() {}

@@ -23,9 +23,25 @@
         <Label fx:id="timerLabel" text="Chargement..." styleClass="timer-label"/>
     </HBox>
 
-    <ScrollPane styleClass="quest-scroll" fitToWidth="true" VBox.vgrow="ALWAYS">
-        <VBox fx:id="questContainer" styleClass="quest-list"/>
-    </ScrollPane>
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <Tab text="Narratif">
+            <ScrollPane styleClass="quest-scroll" fitToWidth="true">
+                <VBox fx:id="narrativeContainer" styleClass="quest-list"/>
+            </ScrollPane>
+        </Tab>
+        <Tab text="Guilde hebdo">
+            <ScrollPane styleClass="quest-scroll" fitToWidth="true">
+                <VBox fx:id="guildContainer" styleClass="quest-list"/>
+            </ScrollPane>
+        </Tab>
+        <Tab text="Talents">
+            <VBox spacing="10" styleClass="quest-list">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <Label fx:id="talentPointsLabel" text="Points: 0"/>
+                <VBox fx:id="talentContainer" spacing="8"/>
+            </VBox>
+        </Tab>
+    </TabPane>
 
     <HBox styleClass="quest-footer" alignment="CENTER">
         <Button fx:id="closeBtn" text="✖  FERMER" onAction="#close" styleClass="btn-close"/>

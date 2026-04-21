@@ -357,7 +357,7 @@ public class MainController {
                 return;
             }
             String cropName = plotting.getActualCulture().getName();
-            double qualityMultiplier = rollHarvestQualityMultiplier() * farms.registerHarvestCombo();
+            double qualityMultiplier = rollHarvestQualityMultiplier() * farms.registerHarvestCombo() * farms.getTalentHarvestMultiplier();
             farms.addHarvestedCrop(cropName, qualityMultiplier);
             farms.addXP(50);
             refreshInventoryUI();
@@ -462,7 +462,7 @@ public class MainController {
                 if (!plot.isEmpty() && plot.getActualCulture().isReady()) {
                     if (!farms.useTool("Sickle", 1)) continue;
                     String cropName = plot.getActualCulture().getName();
-                    farms.addHarvestedCrop(cropName, rollHarvestQualityMultiplier() * farms.registerHarvestCombo());
+                    farms.addHarvestedCrop(cropName, rollHarvestQualityMultiplier() * farms.registerHarvestCombo() * farms.getTalentHarvestMultiplier());
                     farms.addXP(50);
                     plot.collect();
                     collected++;

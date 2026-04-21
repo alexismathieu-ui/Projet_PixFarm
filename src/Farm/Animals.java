@@ -47,6 +47,13 @@ public abstract class Animals {
         this.happiness = Math.max(20.0, this.happiness - 2.0);
     }
 
+    public void applyCareBonus(double multiplier) {
+        double bonus = Math.max(0.0, multiplier - 1.0);
+        if (bonus <= 0) return;
+        this.health = Math.min(100.0, this.health + (bonus * 0.9));
+        this.happiness = Math.min(100.0, this.happiness + (bonus * 1.2));
+    }
+
     public String getSpecies(){return species;}
     public double getBuyPrice() {return buyPrice;}
     public boolean isHungry() { return isHungry; }

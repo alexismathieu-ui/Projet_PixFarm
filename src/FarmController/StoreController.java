@@ -204,10 +204,10 @@ public class StoreController {
                 double pricePerUnit = farms.getDemandPrice(displayName, basePrice);
                 double qualityBonusUnits = farms.consumeQualityBonus(displayName, qty);
                 double specialMultiplier = 1.0;
-                if (displayName.equals(farms.getSpecialOrderItem()) && System.currentTimeMillis() < farms.getSpecialOrderExpiryMs()) {
+                if (displayName.equals(farms.getSpecialOrderItem()) && farms.getSpecialOrderDay() == farms.getGameDay()) {
                     specialMultiplier = farms.getSpecialOrderMultiplier();
                 }
-                double gain = pricePerUnit * (qty + qualityBonusUnits) * specialMultiplier * farms.getPermanentSellMultiplier();
+                double gain = pricePerUnit * (qty + qualityBonusUnits) * specialMultiplier * farms.getPermanentSellMultiplier() * farms.getTalentSellMultiplier();
                 farms.winMoney(gain);
                 totalGain += gain;
                 farms.recordSale(displayName, qty);
